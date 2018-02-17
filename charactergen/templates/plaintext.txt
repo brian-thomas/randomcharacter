@@ -1,0 +1,70 @@
+{{ c.system }} {{ c.class_name }}
+
+{% if c.hp %}HP: {{ c.hp }}{% else %}HD: {{ c.hd }}{% endif %}   AC: {{ c.ac }}   XP: 0
+
+Attributes:
+
+  STR: {{ c.attr.STR }}
+  INT: {{ c.attr.INT }}
+  WIS: {{ c.attr.WIS }}
+  DEX: {{ c.attr.DEX }}
+  CON: {{ c.attr.CON }}
+  CHA: {{ c.attr.CHA }}
+
+Saves:
+
+  {{ c.saves_with_names.poison.0 }}: {{ c.saves_with_names.poison.1 }}
+  {{ c.saves_with_names.wands.0 }}: {{ c.saves_with_names.wands.1 }}
+  {{ c.saves_with_names.stone.0 }}: {{ c.saves_with_names.stone.1 }}
+  {{ c.saves_with_names.breath.0 }}:{{ c.saves_with_names.breath.1 }}
+  {{ c.saves_with_names.magic.0 }}: {{ c.saves_with_names.magic.1 }}
+{% if c.to_hit %}
+To Hit Table:
+
+  AC:   {% for ac, roll in c.to_hit %}{{ "%2d"|format(ac) }} {% endfor %}
+  Roll: {% for ac, roll in c.to_hit %} {{ "%2d"|format(roll) }} {% endfor %}
+{% else %}
+To Hit Bonuses:
+
+  Melee: {{ c.melee_attack_bonus }}
+  Ranged: {{ c.ranged_attack_bonus }}
+{% endif %}
+Languages: Common, Alignment{% for language in c.languages|sort %}, {{ language }}{% endfor %}
+
+Optional Appearance:  {{ c.appearance }}
+
+Equipment:
+  {% for item in c.equipment %}
+   * {{ item -}}
+  {% endfor %}
+
+{% if c.retainer -%}
+Retainer:
+
+  {{ c.retainer }}
+{% endif %}
+{% if c.class_name == 'Thief' -%}
+Thief Skills:
+{% for skill, chance in c.character_class.skills %}
+  {{ skill }}: {{ chance -}}
+{% endfor -%}
+{% endif %}
+{% if c.class_name == 'Cleric' -%}
+Turn Undead:
+{% for undead, roll in c.character_class.turn %}
+  {{ undead }}: {{ roll -}}
+{% endfor -%}
+{% endif %}
+{% if c.spell -%}
+Spells:
+  Level 1: {{ c.spell }}
+{% endif %}
+{% if c.grimoires -%}
+Grimoires:
+{% for book, spells in c.grimoires %}
+ * {{ book }}
+{% for spell in spells %}
+    * {{ spell -}}
+{% endfor %}
+{% endfor %}
+{% endif %}
