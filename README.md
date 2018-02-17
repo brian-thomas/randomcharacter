@@ -30,7 +30,7 @@ You can also generate a list of [NPCs][] and roll [3d6 in order][3d6] or [4d6 dr
 ## Getting it Running
 
 1. Install Flask (`pip install flask`). 
-2. Run `python create.py`
+2. Run `python charactergen/server.py`
 
 ## How It Works
 
