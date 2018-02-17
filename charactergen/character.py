@@ -104,7 +104,7 @@ class Character(BasicAttributesMixin, AppearenceMixin):
     @property
     def saves_with_names(self):
         return dict((s, (self.save_name_table[s], v))
-                    for s, v in self.saves.iteritems())
+                    for s, v in self.saves.items())
 
     def get_character_class(self, classname=None):
         """
@@ -193,7 +193,7 @@ class Character(BasicAttributesMixin, AppearenceMixin):
         """
         Magic-Users and Elves begin with a single first level spell.
         """
-        if self.character_class.has_key('spells'):
+        if 'spells' in self.character_class.keys():
             spells = self.character_class['spells'][:self.num_first_level_spells]
             return [random.choice(spells)]
         return None
@@ -303,7 +303,7 @@ class LotFPCharacter(AscendingAcMixin, Character):
         Magic-Users and Elves begin with a single first level spell and 3 random
         spells in their spell book.
         """
-        if self.character_class.has_key('spells'):
+        if 'spells' in self.character_class.keys():
             if self.character_class == characterclass.MAGICUSER:
                 return ['Read Magic'] + random.sample(characterclass.LOTFP['spells'], 3)
             elif self.character_class == characterclass.ELF:
@@ -330,7 +330,7 @@ class LotFPCharacter(AscendingAcMixin, Character):
         int_bonus = self.get_bonus(*self.attributes[characterclass.INT])
         skills['Languages'] = max(skills['Languages'] + int_bonus, 0)
         self.sneak_attack = skills.pop('Sneak Attack')
-        skills = [(s, v) for s, v in skills.iteritems()]
+        skills = [(s, v) for s, v in skills.items()]
         return skills
 
     def get_equipment(self):
@@ -610,7 +610,7 @@ class PahvelornCharacter(HitDiceMixin, LBBCharacter):
         tack on grimoires to the equipment list, instead of calling out a
         single spell.
         """
-        if self.character_class.has_key('spells'):
+        if 'spells' in self.character_class.keys():
             self.grimoires = [
                 characterclass.STARTING_GRIMOIRE,
                 random.choice(characterclass.GRIMOIRES),

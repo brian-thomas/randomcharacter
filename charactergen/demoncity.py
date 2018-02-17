@@ -187,8 +187,12 @@ class Character(mixins.AppearenceMixin):
 
     # Generate flat list of skills
     SKILLS_LIST = []
-    for attribute, skills in SKILLS.iteritems():
-        SKILLS_LIST.extend([(s, attribute) for s in skills])
+    
+    for attrib, skills in SKILLS.items():
+        for s in skills:
+            mytup = (s, attrib)
+            SKILLS_LIST.append(mytup)
+        #SKILLS_LIST.extend([(s, attrib) for s in skills])
     SKILLS_LIST = set(SKILLS_LIST)
 
     OCCUPATIONS = [

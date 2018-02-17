@@ -7,7 +7,7 @@ import character
 import characterclass
 import dangertime
 import dice
-import fifth
+import charactergen.fifth as fifth
 import mazerats
 import troika
 import demoncity
@@ -95,7 +95,7 @@ def make_mazerats_char(number):
 def generate_npcs(number):
     if number > 1000:
         number = 1000
-    characters = [character.BasicCharacter(testing=True) for _ in xrange(number)]
+    characters = [character.BasicCharacter(testing=True) for _ in range(number)]
     return render_template("npcs.html", characters=characters)
 
 @app.route('/')
