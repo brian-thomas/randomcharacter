@@ -17,6 +17,8 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+DEFAULTS = {'number': 10, 'system': "basic", 'fmt' : "html"}
+
 SYSTEMS = {
     'lbb': character.LBBCharacter,
     'holmes': character.HolmesCharacter,
@@ -44,7 +46,7 @@ def three_dee_six():
     roll = [dice.xdy(3,6) for _ in range(6)]
     return render_template("3d6.html", roll=roll)
 
-@app.route('/equipment/', defaults={'system': "basic"})
+@app.route('/equipment/', defaults=DEFAULTS)
 @app.route('/equipment/<system>/')
 def equipment(system):
     system = SYSTEMS.get(system, None)
@@ -90,13 +92,29 @@ def make_mazerats_char(number):
     characters = [mazerats.Character() for _ in range(number)]
     return render_template("mazerats.html", characters=characters)
 
-@app.route('/npcs/', defaults={'number': 10})
-@app.route('/npcs/<int:number>/')
-def generate_npcs(number):
+@app.route('/npcs/', defaults=DEFAULTS)
+@app.route('/npcs/<int:number>/', defaults={'system': "basic", 'fmt' : "html"})
+@app.route('/<system>/npcs/', defaults={'number':10, 'fmt' : "html"})
+@app.route('/<system>/npcs/<fmt>/', defaults={'number':10})
+@app.route('/<system>/npcs/<int:number>/', defaults={'fmt': "html"})
+@app.route('/<system>/npcs/<int:number>/<fmt>/')
+def generate_npcs(number, system, fmt):
     if number > 1000:
         number = 1000
-    characters = [character.BasicCharacter(testing=True) for _ in range(number)]
-    return render_template("npcs.html", characters=characters)
+
+    # characters = [character.BasicCharacter(testing=True) for _ in range(number)]
+    characters = [_generate_char(system) for _ in range(number)]
+
+    dparams = _get_display_params(fmt)
+
+    if fmt == "json":
+        content = json.dumps([ c.to_dict() for c in characters])
+        return Response(content, status=200, mimetype=dparams['mimetype'])
+    else:
+        content = render_template("npcs.html", characters=characters)
+
+    #return render_template("npcs.html", characters=characters)
+    return content
 
 @app.route('/')
 def index():
@@ -106,36 +124,49 @@ def index():
 def index_text():
     return redirect('/basic/text/')
 
-@app.route('/<system>/', defaults={'fmt': "html"})
-@app.route('/<system>/<fmt>/')
-def generate(system, fmt):
-    if fmt == "text":
-        template = "plaintext.txt"
-        mimetype = "text/plain"
-    elif fmt == "html":
-        template = "index.html"
-        mimetype = "text/html"
-    elif fmt == "yaml":
-        template = "yaml.txt"
-        mimetype ="text/plain"
-    elif fmt == "json":
-        mimetype = "application/json"
-    else:
-        # default to HTML for unknown display formats
-        return redirect(url_for('generate', system=system, fmt="html"))
+def _generate_char(system):
 
     system = SYSTEMS.get(system, None)
     if not system:
         # default to basic for unknown systems
-        return redirect(url_for('generate', system='basic', fmt=fmt))
+        return None
 
     c = get_class(request.args.get('class'))
-    context = system(classname=c)
-    if fmt == "json":
-        content = json.dumps(context.to_dict())
+    return system(classname=c)
+
+def _get_display_params(fmt):
+    if fmt == "text":
+        template = "plaintext.txt"
+        mimetype = "text/plain"
+    elif fmt == "yaml":
+        template = "yaml.txt"
+        mimetype ="text/plain"
+    elif fmt == "json":
+        template = None
+        mimetype = "application/json"
     else:
-        content = render_template(template, c=context)
-    response = Response(content, status=200, mimetype=mimetype)
+        # default to HTML for unknown display formats
+        template = "index.html"
+        mimetype = "text/html"
+
+    return {'mimetype':mimetype, 'template' : template}
+
+@app.route('/<system>/', defaults={'fmt': "html"})
+@app.route('/<system>/<fmt>/')
+def generate(system, fmt):
+
+    char = _generate_char(system)
+    if not char:
+        return redirect(url_for('generate', system='basic', fmt=fmt))
+
+    dparams = _get_display_params(fmt)
+
+    if fmt == "json":
+        content = json.dumps(char.to_dict())
+    else:
+        content = render_template(dparams['template'], c=char)
+
+    response = Response(content, status=200, mimetype=dparams['mimetype'])
 
     return response
 
