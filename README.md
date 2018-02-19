@@ -1,6 +1,7 @@
 # Random D&D Character Generator
 
 By Ramanan Sivaranjan, 2012—
+Tweaks by Brian THomas, 2018-
 
 ## Introduction
 
