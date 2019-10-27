@@ -311,6 +311,40 @@ GRIMOIRES = [
     ]),
 ]
 
+HOMEBREW = {
+    'skills': [
+        ('Athletics', 0),
+        ('Architecture', 0),
+        ('Bushcraft', 0),
+        ('Languages', 0),
+        ('Open Doors', 0),
+        ('Search', 0),
+        ('Social', 0),
+        ('Sleight of Hand', 0),
+        ('Sneak Attack', 0),
+        ('Stealth', 0),
+        ('Tinker', 0),
+    ],
+
+    'specialist_builds': [
+        ['Stealth', 'Stealth', 'Sneak Attack', 'Sneak Attack'],
+        ['Search', 'Search', 'Tinker', 'Tinker'],
+        ['Athletics', 'Athletics', 'Open Doors', 'Search'],
+        ['Stealth', 'Atheletics', 'Search', 'Sneak Attack'],
+        ['Sneak Attack', 'Sneak Attack', 'Sneak Attack', 'Stealth'],
+        ['Search', 'Search', 'Search', 'Search'],
+        ['Tinker', 'Tinker', 'Tinker', 'Tinker'],
+        ['Architecture', 'Languages', 'Open Doors', 'Tinker'],
+    ],
+
+    'saves': {
+        'poison': 'Health',
+        'wands': 'Dodge',
+        'stone': 'Perception',
+        'breath': 'Willpower',
+        'magic': 'Fortitude'
+    },
+}
 
 """
 Additional information for Lamentations of the Flame Princess characters.

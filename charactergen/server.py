@@ -28,7 +28,8 @@ SYSTEMS = {
     'carcosa': character.CarcosaCharacter,
     'moc': character.MastersOfCarcosaCharacter,
     'dd': character.DelvingDeeperCharacter,
-    'lotfp': character.LotFPCharacter
+    'lotfp': character.LotFPCharacter,
+    'homebrew': character.LotFP_Homebrew_Character
 }
 
 
@@ -178,7 +179,6 @@ def get_class(classname):
     if classname not in characterclass.VALID_CLASS_NAMES:
         return None
     return classname
-
 
 #
 # base64.b64encode(pickle.dumps(context))

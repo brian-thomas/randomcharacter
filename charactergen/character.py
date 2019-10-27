@@ -103,8 +103,8 @@ class Character(BasicAttributesMixin, AppearenceMixin):
 
     @property
     def saves_with_names(self):
-        return dict((s, (self.save_name_table[s], v))
-                    for s, v in self.saves.items())
+        print (self.save_name_table)
+        return dict((s, (self.save_name_table[s], v)) for s, v in self.saves.items())
 
     def get_character_class(self, classname=None):
         """
@@ -337,6 +337,69 @@ class LotFPCharacter(AscendingAcMixin, Character):
         return characterclass.LOTFP['equipment'][self.class_name][xdy(3,6)-3]
 
     def get_languages(self): return []
+
+
+class LotFP_Homebrew_Character(LotFPCharacter):
+    """ Alternative model for our homebrew campaign.
+    """ 
+
+    @property
+    def system(self): return "Homebrew"
+
+    @property
+    def save_name_table(self):
+        return characterclass.HOMEBREW['saves']
+
+    def get_skills(self):
+        
+        skills = dict((s, x) for s, x in characterclass.HOMEBREW['skills'])
+        if self.character_class == characterclass.THIEF:
+            self.class_name = 'Specialist'
+            for s in random.choice(characterclass.HOMEBREW['specialist_builds']):
+                skills[s] = skills[s] + 2
+        elif self.character_class == characterclass.DWARF:
+            skills['Architecture'] = 3
+            skills['Armory'] = 3
+        elif self.character_class == characterclass.ELF:
+            pass
+        elif self.character_class == characterclass.HALFLING:
+            skills['Bushcraft'] = 3
+            skills['Stealth'] = 3
+
+        str_bonus = self.get_bonus(*self.attributes[characterclass.STR])
+        skills['Open Doors'] = max(skills['Open Doors'] + str_bonus, 0)
+
+        int_bonus = self.get_bonus(*self.attributes[characterclass.INT])
+        skills['Languages'] = max(skills['Languages'] + int_bonus, 0)
+
+        self.sneak_attack = skills.pop('Sneak Attack')
+
+        skills = [(s, v) for s, v in skills.items()]
+        return skills
+
+
+    def get_saves(self):
+        """
+        We use ability checks.
+        """
+        saves = {'poison': 0, 'wands': 0, 'stone': 0, 'breath': 0, 'magic': 0} 
+
+        # Health
+        saves['poison'] = self.get_bonus(*self.attributes[characterclass.CON])
+
+        # Dodge
+        saves['wands'] = self.get_bonus(*self.attributes[characterclass.DEX])
+
+        # Perception
+        saves['stone'] = self.get_bonus(*self.attributes[characterclass.INT])
+
+        # Willpower
+        saves['breath'] = self.get_bonus(*self.attributes[characterclass.WIS])
+
+        # Fortitude
+        saves['magic'] = self.get_bonus(*self.attributes[characterclass.STR])
+
+        return saves
 
 
 class HolmesCharacter(Character):
