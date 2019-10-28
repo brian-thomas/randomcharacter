@@ -2,7 +2,7 @@ import json
 
 from flask import request, Response, redirect, render_template, url_for, Flask
 
-import adventuregame
+import charactergen.adventuregame
 import character
 import characterclass
 import dangertime
