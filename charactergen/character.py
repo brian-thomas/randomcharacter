@@ -346,6 +346,31 @@ class LotFP_Homebrew_Character(LotFPCharacter):
     def system(self): return "Homebrew"
 
     @property
+    def melee_attack_bonus(self):
+        bonus = self.get_bonus(*self.attributes[characterclass.STR])
+        bonus += self.attack_bonus
+
+        # check occupation, may add a bonus
+        occupation = self.get_occupation()
+        bonus += occupation['MB']
+
+        if bonus > 0:
+            bonus = "+%d" % bonus
+        return bonus
+
+    @property
+    def ranged_attack_bonus(self):
+        bonus = self.get_bonus(*self.attributes[characterclass.DEX])
+        bonus += self.attack_bonus
+        # check occupation, may add a bonus
+        occupation = self.get_occupation()
+        bonus += occupation['RB']
+
+        if bonus > 0:
+            bonus = "+%d" % bonus
+        return bonus
+
+    @property
     def save_name_table(self):
         return characterclass.HOMEBREW['saves']
 
@@ -362,6 +387,67 @@ class LotFP_Homebrew_Character(LotFPCharacter):
     def demihumans(self):
         # demihumans are not a class, but a race 
         return False
+
+    @staticmethod
+    def _update_tuple (stuple, change):
+        v = int(stuple[1]) + change
+        return (stuple[0], v)
+
+    def _str_to_characterclass_index (value:str)->int:
+        # doing this type of thing is a sign of poorly designed code...sigh.
+        #
+        if value == 'STR':
+            return characterclass.STR
+        if value == 'CON':
+            return characterclass.CON
+        if value == 'DEX':
+            return characterclass.DEX
+        if value == 'INT':
+            return characterclass.INT
+        if value == 'WIS':
+            return characterclass.WIS
+        if value == 'CHA':
+            return characterclass.CHA
+        return None
+
+    def get_occupation(self):
+        occupations = characterclass.HOMEBREW['occupations']
+        return occupations[self.occupation]
+
+    def get_equipment(self):
+        equipment = super().get_equipment()
+
+        # Add any extra equipment from occupation
+        occupation = self.get_occupation()
+        
+        for equip in occupation['equip']:
+            if equip in equipment:
+                # give them 1d6 x 10 sp instead
+                equipment.append(f"%s sp" % str(xdy(1,6) * 10))
+            else:
+                equipment.append(equip)
+
+        return equipment
+
+    def roll_attribute_scores(self):
+
+        attributes = super(LotFP_Homebrew_Character, self).roll_attribute_scores()
+
+        # randomize (former) occupation
+        occupations = characterclass.HOMEBREW['occupations']
+        o_name = random.choice(list(occupations.keys())) 
+        self.occupation = o_name
+        occupation = occupations[o_name]
+
+        # update stats by occupation. This is the time to do this.
+        # IF indicated in the occupation, update the character to change
+        # (raise) their stats by indicated amount 
+        for stat in occupation['stats'].keys():
+            change = occupation['stats'][stat]
+            attrib = LotFP_Homebrew_Character._str_to_characterclass_index(stat)
+            attributes[attrib] = LotFP_Homebrew_Character._update_tuple(attributes[attrib], change)
+
+        return attributes
 
     def get_bonus(self, attr, val):
         """
@@ -485,6 +571,11 @@ class LotFP_Homebrew_Character(LotFPCharacter):
             s = random.choice(skill_names)
             skills[s] = skills[s] +1
             add_skill_points -= 1
+
+        # add in any occupational skills
+        occupation = self.get_occupation()
+        for skill in occupation['skills']:
+            skills[skill] += 1
 
         # for special formatting which we aren't using
         if self.character_class == characterclass.THIEF:
