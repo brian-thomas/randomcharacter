@@ -1,1 +1,1 @@
-web: gunicorn charactergen.service:app --log-file=-
+web: gunicorn charactergen.server:app --log-file=-
