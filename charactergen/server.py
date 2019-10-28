@@ -135,7 +135,7 @@ def _generate_char(system):
     c = get_class(request.args.get('class'))
     return system(classname=c)
 
-def _get_display_params(fmt):
+def _get_display_params(fmt, system=None):
     if fmt == "text":
         template = "plaintext.txt"
         mimetype = "text/plain"
@@ -147,8 +147,12 @@ def _get_display_params(fmt):
         mimetype = "application/json"
     else:
         # default to HTML for unknown display formats
-        template = "index.html"
         mimetype = "text/html"
+
+        if system == "homebrew": 
+            template = "homebrew.html"
+        else:
+            template = "index.html"
 
     return {'mimetype':mimetype, 'template' : template}
 
@@ -160,7 +164,7 @@ def generate(system, fmt):
     if not char:
         return redirect(url_for('generate', system='basic', fmt=fmt))
 
-    dparams = _get_display_params(fmt)
+    dparams = _get_display_params(fmt, system)
 
     if fmt == "json":
         content = json.dumps(char.to_dict())

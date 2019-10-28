@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="system"> {{ c.system }}</h2>
+<h1>{{ c.race }} {{ c.class_name }}</h1>
+<h2 class="appearence">{{ c.appearance }}</h2>
+
+<table class="attr">
+    <tr>
+        <td><strong>STR</strong>: {{ c.attr.STR }}</td>
+        <td><strong>INT</strong>: {{ c.attr.INT }}</td>
+        <td><strong>WIS</strong>: {{ c.attr.WIS }}</td>
+    </tr>
+    <tr>
+        <td><strong>DEX</strong>: {{ c.attr.DEX }}</td>
+        <td><strong>CON</strong>: {{ c.attr.CON }}</td>
+        <td><strong>CHA</strong>: {{ c.attr.CHA }}</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td class="save">{{ c.saves_with_names.poison.0}}</td>
+        <td>{{ c.saves_with_names.poison.1}}</td>
+        <td>{% if c.hp %}<strong>HP</strong>: {{ c.hp }}{% else %}<strong>HD</strong>: {{ c.hd }}{% endif %}</td>
+    </tr>
+    <tr>
+        <td class="save">{{ c.saves_with_names.wands.0}}</td>
+        <td>{{ c.saves_with_names.wands.1}}</td>
+        <td><strong>AC</strong>: {{ c.ac }}</td>
+    </tr>
+    <tr>
+        <td class="save">{{ c.saves_with_names.stone.0}}</td>
+        <td>{{ c.saves_with_names.stone.1}}</td>
+        <td><strong>XP</strong>: 0 </td>
+    </tr>
+    <tr>
+        <td class="save">{{ c.saves_with_names.breath.0}}</td>
+        <td>{{ c.saves_with_names.breath.1}}</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td class="save">{{ c.saves_with_names.magic.0}}</td>
+        <td>{{ c.saves_with_names.magic.1}}</td>
+        <td></td>
+    </tr>
+</table>
+
+<table class="weapon">
+{% if c.to_hit %}
+    <tr>
+        <td><strong>AC</strong></td>
+        {% for ac, roll in c.to_hit %}
+        <td>{{ ac }}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <td><strong>Roll</strong></td>
+        {% for ac, roll in c.to_hit %}
+        <td>{{ roll }}</td>
+        {% endfor %}
+    </tr>
+{% else %}
+    <tr>
+        <td>Melee Attack Bonus: {{ c.melee_attack_bonus }}</td>
+        <td>Ranged Attack Bonus: {{ c.ranged_attack_bonus }}</td>
+    </tr>
+{% endif %}
+</table>
+
+<div id="extras">
+  <div class="block">
+      <h3>Equipment</h3>
+      <ul>
+      {% for item in c.equipment %}
+          <li>{{ item }}</li>
+      {% endfor %}
+      {% if c.grimoires %}
+          {% for book, spells in c.grimoires %}
+          <li>{{ book }}
+              <ul>
+                  {% for spell in spells %}
+                  <li>{{ spell }}</li>
+                  {% endfor %}
+              </ul>
+          </li>
+          {% endfor %}
+      {% endif %}
+      </ul>
+  </div>
+
+  {% if c.retainer %}
+  <div class="block">
+      <h3>Retainer</h3>
+      <ul>
+          <li>{{ c.retainer }}</li>
+      </ul>
+  </div>
+  {% endif %}
+
+  {% if c.skills %}
+  <div class="block">
+      <h3>Skills</h3>
+      <table class="thief skills">
+          <tr>
+              <th>Skill</th><th>Roll</th>
+          </tr>
+          {% for skill, chance in c.skills %}
+          <tr>
+              <td>{{ skill }}</td><td>{{ chance }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+      {% if c.sneak_attack %}
+      <h3>Sneak Attack ({{c.sneak_attack}})</h3>
+      <table class="thief skills">
+	      <tr><td>On a Sneak Attack apply a +{{c.sneak_attack}} bonus to the attack roll and add {{ c.sneak_attack_dmg }}.</td></tr>
+      </table>
+      {% endif %}
+  </div>
+  {% elif c.class_name == 'Cleric' and not c.system == 'Beta LotFP' %}
+  <div class="block">
+      <h3>Turn Undead</h3>
+      <table class="skills">
+          <tr>
+              <th>Undead</th><th>Roll</th>
+          </tr>
+          {% for undead, roll in c.character_class.turn %}
+          <tr>
+              <td>{{ undead }}</td><td>{{ roll }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+  </div>
+  {% endif %}
+
+  {% if c.spell %}
+  <div class="block">
+      <h3>Spells</h3>
+      <ul>
+          <li><strong>Level 1</strong>:
+              <ul>
+                  {% for spell in c.spell %}
+                  <li>{{ spell }}</li>
+                  {% endfor %}
+              </ul>
+          </li>
+      </ul>
+  </div>
+  {% endif %}
+
+  {% if c.languages|length > 1 %}
+  <div class="block">
+      <h3>Languages</h3>
+      <ul>
+          <li>Common</li>
+          <li>Alignment</li>
+          {% for language in c.languages|sort %}
+          <li>{{ language }}</li>
+          {% endfor %}
+      </ul>
+  </div>
+  {% endif %}
+
+  {% if c.wild_talent %}
+  <div class="block">
+    <h3>Psionic Talent</h3>
+    <p>{{ c.wild_talent }}</p>
+  </div>
+  {% endif %}
+</div>
+
+<!--
+{% include "plaintext.txt" %}
+-->
+
+<footer>
+    <p>
+    You can also generate <strong><a href="/lbb">1974 D&D characters</a></strong>, <strong><a href="/holmes">Holmes D&D characters</a></strong> and <strong><a href="/lotfp">Lamentations of the Flame Princess</a></strong>. Add "text" to the end of a URL to get a <a href="/text">plaintext character sheet</a>. If you are a programmer adding "json" to the end of the URL gives you a <a href="/basic/json">JSON dictionary<a>. You can also generate OD&D characters suitable for the campaign worlds of <strong><a href='/pahvelorn'>Pahvelorn</a></strong>, <strong><a href="/apolyon">Apolyon</a></strong>, and <strong><a href='/carcosa/'>Carcosa</a></strong>.
+    </p>
+    <p>
+        If you need a name, check out <a href="http://www.rinkworks.com/namegen/">The Fantasy Name Generator</a>.
+    </p>
+    <p>
+    Site designed and built by <a href="http://funkaoshi.com">Ramanan Sivaranjan</a>. Equipment lists generated using <a href="http://www.necropraxis.com/2012/07/20/odd-equipment/">random charts from Necropraxis.</a> Other random tables taken from <em>"Moldvay" Basic D&D</em>. Check out more D&D stuff at <a href="http://save.vs.totalpartykill.ca">Save vs. Total Party Kill</a>. Some armour and weapons for the <a href="/carcosa">Carcosa</a> character generator comes from <a href="http://dungeonofsigns.blogspot.ca/2013/02/strange-armor-alternatives.html">Strange Armour Alternatives from Dungeon of Signs</a> and <a href="http://carapaceking.blogspot.ca/2012/01/making-do-with-limited-resources.html">Making do with Limited Resources from Carapace King</a>. A huge thanks to <a href="https://plus.google.com/+EricBoyd/posts">Eric Boyd</a> for making the LotFP character sheets.
+    </p>
+
+    <p>
+        If this site looks ugly, please let me know&mdash;unless you're using Internet Explorer. <a href="https://github.com/funkaoshi/randomcharacter">This is an open source project.</a>
+    </p>
+</footer>
+{% endblock %}

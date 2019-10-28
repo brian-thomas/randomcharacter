@@ -73,6 +73,21 @@ class BasicAttributesMixin(object):
         return "%d" % val
 
 
+class BasicAttribRaceMixin(BasicAttributesMixin):
+
+    def __init__(self, *args, **kwargs):
+
+        # randomize race
+        races = ['Human', 'Human', 'Elf', 'Dwarf', 'Halfling']
+        self._race = random.choice(races)
+
+        super(BasicAttribRaceMixin, self).__init__(*args, **kwargs)
+
+    @property
+    def race (self):
+        return self._race
+
+
 class AppearenceMixin(object):
     """
     Display the appearance of the character. This is the best part of this

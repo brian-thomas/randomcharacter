@@ -3,7 +3,7 @@ import operator
 import random
 
 import characterclass
-from mixins import BasicAttributesMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
+from mixins import BasicAttribRaceMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
 from dice import d, xdy
 
 
@@ -17,7 +17,7 @@ def _is_dwarf(INT, CON, DEX, STR):
     return CON > 11 and STR >= 9, characterclass.DWARF
 
 
-class Character(BasicAttributesMixin, AppearenceMixin):
+class Character(BasicAttribRaceMixin, AppearenceMixin):
     """
     D&D characters are structurally quite similar. Common aspects of character
     creation are managed here. Subclasses for the different systems handle
@@ -103,7 +103,6 @@ class Character(BasicAttributesMixin, AppearenceMixin):
 
     @property
     def saves_with_names(self):
-        print (self.save_name_table)
         return dict((s, (self.save_name_table[s], v)) for s, v in self.saves.items())
 
     def get_character_class(self, classname=None):
@@ -350,31 +349,151 @@ class LotFP_Homebrew_Character(LotFPCharacter):
     def save_name_table(self):
         return characterclass.HOMEBREW['saves']
 
+    @property
+    def hit_die(self):
+        base_hit_die = characterclass.LOTFP['hitdice'][self.character_class['name']]
+        if self.race == 'Dwarf':
+            # dwarves get bump up in hit die
+            base_hit_die += 2
+            
+        return base_hit_die
+
+    @property
+    def demihumans(self):
+        # demihumans are not a class, but a race 
+        return False
+
+    def get_bonus(self, attr, val):
+        """
+        Like LotFP but race can influence bonus returned.
+        """
+        bonus = super().get_bonus(attr, val)
+
+        if self.race != None:
+            if attr == 'INT' and self.race == 'Elf':
+                # bonus to Elves
+                bonus += 1
+
+            elif attr == 'CON' and self.race == 'Dwarf':
+                bonus += 1
+
+            elif attr == 'DEX' and self.race == 'Elf':
+                bonus += 1
+
+            elif attr == 'DEX' and self.race == 'Halfling':
+                bonus += 2
+
+            elif attr == 'CHA' and self.race == 'Elf':
+                bonus += 1
+
+        return bonus
+
+
+    def get_spell(self):
+        """
+        Magic-Users begin with Read Magic, Summon and 2 random spells.
+        """
+        if 'spells' in self.character_class.keys():
+            if self.character_class == characterclass.MAGICUSER:
+                number = 2
+                if self.race == 'Human':
+                    number = 3
+                return ['Read Magic', 'Summon'] + random.sample(characterclass.LOTFP['spells'], number)
+        elif self.character_class == characterclass.CLERIC:
+            return ['One clerical spell a day']
+        return None
+
+
+    def get_character_class(self, classname=None):
+        """
+        We determine character class based on your prime attribute.
+        """
+        if classname:
+            return characterclass.CLASS_BY_NAME[classname]
+
+        prime_attribute, _ = sorted(self.attributes[:4],
+                                    reverse=True, key=operator.itemgetter(1))[0]
+
+        return characterclass.PRIME_REQUISITE[prime_attribute]
+
+
+    def _randomize_skills(skills:dict, skill_list:list, points_to_spend:int)->dict:
+        while (points_to_spend > 0):
+            s = random.choice(skill_list)
+            skills[s] = skills[s] + 1
+            points_to_spend -= 1
+        return skills
+
     def get_skills(self):
         
         skills = dict((s, x) for s, x in characterclass.HOMEBREW['skills'])
+
+        # deal with class-based skill tailoring 
         if self.character_class == characterclass.THIEF:
-            self.class_name = 'Specialist'
-            for s in random.choice(characterclass.HOMEBREW['specialist_builds']):
-                skills[s] = skills[s] + 2
-        elif self.character_class == characterclass.DWARF:
-            skills['Architecture'] = 3
+            skills['Sneak Attack'] = 0
+
+            # add some thief skills
+            thief_skills = random.choice(characterclass.HOMEBREW['specialist_builds'])
+            skills = LotFP_Homebrew_Character._randomize_skills(skills, thief_skills, 10)
+
+        if self.character_class == characterclass.CLERIC:
+            skills['Theology'] = 3
+
+        if self.character_class == characterclass.MAGICUSER:
+            skills['Arcana'] = 3
+
+        if self.character_class == characterclass.FIGHTER:
             skills['Armory'] = 3
-        elif self.character_class == characterclass.ELF:
-            pass
-        elif self.character_class == characterclass.HALFLING:
-            skills['Bushcraft'] = 3
-            skills['Stealth'] = 3
+            skills['Athletics'] = 3
+
+        # bump up skills for some races
+        if self.race == 'Dwarf':
+            dwarf_skills = ['Armory', 'Architecture']
+            skills = LotFP_Homebrew_Character._randomize_skills(skills, dwarf_skills, 6)
+
+        if self.race == 'Halfling':
+            halfling_skills = ['Bushcraft', 'Stealth']
+            skills = LotFP_Homebrew_Character._randomize_skills(skills, halfling_skills, 6)
+
+        if self.race == 'Human' and self.character_class != characterclass.MAGICUSER:
+            # m-us get an extra spell, others get 5 rando points in skills
+            skills = LotFP_Homebrew_Character._randomize_skills(skills, list(skills.keys()), 5)
 
         str_bonus = self.get_bonus(*self.attributes[characterclass.STR])
-        skills['Open Doors'] = max(skills['Open Doors'] + str_bonus, 0)
-
+        dex_bonus = self.get_bonus(*self.attributes[characterclass.DEX])
         int_bonus = self.get_bonus(*self.attributes[characterclass.INT])
-        skills['Languages'] = max(skills['Languages'] + int_bonus, 0)
+        cha_bonus = self.get_bonus(*self.attributes[characterclass.CHA])
 
-        self.sneak_attack = skills.pop('Sneak Attack')
+        # set some defaults on core skills
+        # We dont adopt a setting a minimum of '0' except for social skill
+        skills['Athletics'] = skills['Athletics'] + max(str_bonus, dex_bonus)
+        skills['Languages'] = skills['Languages'] + int_bonus
+        skills['Open Doors'] = skills['Open Doors'] + str_bonus
+        skills['Search'] = skills['Search'] + int_bonus
+        skills['Stealth'] = skills['Stealth'] + dex_bonus
+        skills['Social'] = max(skills['Social'] + cha_bonus, 0)
 
+        # everyone gets 1 + Int Bonus to spend on any skill. 
+        add_skill_points = max(int_bonus+1, 0)
+
+        if self.race == 'Human':
+            add_skill_points += 5
+
+        # apportion all remaining skill points randomly
+        skill_names = list(skills.keys()) 
+        while (add_skill_points > 0):
+            s = random.choice(skill_names)
+            skills[s] = skills[s] +1
+            add_skill_points -= 1
+
+        # for special formatting which we aren't using
+        if self.character_class == characterclass.THIEF:
+            self.sneak_attack = skills.pop('Sneak Attack')
+            self.sneak_attack_dmg = '+1d6'
+
+        # pass thru and make an array
         skills = [(s, v) for s, v in skills.items()]
+
         return skills
 
 
