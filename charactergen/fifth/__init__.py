@@ -1,4 +1,4 @@
-from dice import d
+from charactergen.dice import d
 from fifth.backgrounds import Background
 from fifth.race import Race
 from fifth.processor import CharacterProcessor
