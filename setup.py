@@ -34,8 +34,6 @@ with open(join(dirname(__file__), 'README.md'), 'rb' ) as f:
     long_description = f.read().decode('utf-8').strip()
 
 import os
-scripts = [os.path.join("bin",file) for file in os.listdir("bin")]
-
 import charactergen
 version=charactergen.version
 
@@ -48,8 +46,6 @@ setup (
 
     keywords = 'python osr character generator',
     long_description=long_description,
-
-    scripts=scripts,
 
     maintainer='Brian Thomas',
     maintainer_email='galactictaco@gmail.com',
