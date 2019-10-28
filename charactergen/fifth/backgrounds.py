@@ -1,7 +1,7 @@
 import random
 
-from fifth.languages import LANGUAGES
-from fifth.processor import CharacterProcessor
+from charactergen.fifth.languages import LANGUAGES
+from charactergen.fifth.processor import CharacterProcessor
 
 
 class AbstractBackground(object):
