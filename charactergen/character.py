@@ -2,9 +2,9 @@ import copy
 import operator
 import random
 
-import characterclass
-from mixins import BasicAttribRaceMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
-from dice import d, xdy
+import charactergen.characterclass as characterclass 
+from charactergen.mixins import BasicAttribRaceMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
+from charactergen.dice import d, xdy
 
 
 def _is_halfling(INT, CON, DEX, STR):

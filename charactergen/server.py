@@ -2,15 +2,15 @@ import json
 
 from flask import request, Response, redirect, render_template, url_for, Flask
 
-import charactergen.adventuregame
-import character
-import characterclass
-import dangertime
-import dice
+import charactergen.adventuregame as adventuregame 
+import charactergen.character as character 
+import charactergen.characterclass as characterclass
+import charactergen.dangertime as dangertime
+import charactergen.dice as dice 
 import charactergen.fifth as fifth
-import mazerats
-import troika
-import demoncity
+import charactergen.mazerats as mazerats
+import charactergen.troika as troika 
+import charactergen.demoncity as demoncity
 
 DEBUG = True
 
