@@ -3,6 +3,7 @@
 By Ramanan Sivaranjan, 2012—
 Tweaks by Brian THomas, 2018-
 
+
 ## Introduction
 
 This is a small web application for generating random D&D characters. The
