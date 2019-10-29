@@ -198,7 +198,7 @@ class Character(BasicAttribRaceMixin, AppearenceMixin):
         return None
 
     def get_personality(self):
-        return ', '.join(random.sample(characterclass.PERSONALITY, 2))
+        return ', '.join(random.sample(characterclass.PERSONALITY, 1))
 
     def get_notes(self):
         """

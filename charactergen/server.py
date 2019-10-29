@@ -103,7 +103,6 @@ def generate_npcs(number, system, fmt):
     if number > 1000:
         number = 1000
 
-    # characters = [character.BasicCharacter(testing=True) for _ in range(number)]
     characters = [_generate_char(system) for _ in range(number)]
 
     dparams = _get_display_params(fmt)
@@ -114,7 +113,6 @@ def generate_npcs(number, system, fmt):
     else:
         content = render_template("npcs.html", characters=characters)
 
-    #return render_template("npcs.html", characters=characters)
     return content
 
 @app.route('/')

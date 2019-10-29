@@ -623,7 +623,7 @@ PERSONALITY = [
     'Polite', 'Pompous', 'Pondering', 'Pontificating', 'Practical',
     'Prejudiced', 'Pretentious', 'Preoccupied', 'Promiscuous', 'Proper',
     'Proselytizing', 'Proud', 'Prudent', 'Prudish', 'Prying', 'Puerile',
-    'Pugnacious', 'Quiet', 'Quirky', 'Racist', 'Rascal', 'Rash', 'Realistic',
+    'Pugnacious', 'Quiet', 'Quirky', 'Racist', 'Randy', 'Rascal', 'Rash', 'Realistic',
     'Rebellious', 'Reckless', 'Refined', 'Repellent', 'Reserved', 'Respectful',
     'Responsible', 'Restless', 'Reticent', 'Reverent', 'Rigid', 'Risk-taking',
     'Rude', 'Sadistic', 'Sarcastic', 'Sardonic', 'Sassy', 'Savage', 'Scared',
