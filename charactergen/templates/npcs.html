@@ -6,7 +6,6 @@
 
 {% block content %} 
 
-<h2 class="system"><a href="http://funkaoshi.com">A Funkaoshi Production</a> Presents</h2>
 <h1>{{characters|length}} Random NPCs</h1>
 <h2 class="appearence">&nbsp;</h2>
 
@@ -25,13 +24,13 @@
 	        <th class="attr">HP</th>
 		<th class="appearence">Appearance and Personality</th>
 		<th></th>
-	    </tr>
 -->
+	    </tr>
 	</thead>
     {% for c in characters %}
     <tr> <td colspan="10"><hr/></td> </tr>
     <tr>
-        <td class="class">{{ c.class_name }}</td>
+	<td class="class">{{ c.race }} {{c.class_name}}</td>
 	<td class="attr"><b>STR</b> {{ c.attr.STR }}</td>
 	<td class="attr"><b>INT</b> {{ c.attr.INT }}</td>
 	<td class="attr"><b>WIS</b> {{ c.attr.WIS }}</td>
@@ -51,8 +50,11 @@
         {% endif -%}
 	</td>
         <td></td>
-        <!-- <td class="appearence">{{ c.appearance }}, {{ c.personality }}</td>
-	-->
+        <!-- <td class="appearence">{{ c.appearance }}, {{ c.personality }}</td> -->
+    </tr> 
+    <tr>
+	    <td></td>
+	    <td class="appearence" colspan="9"><b>Occupation: </b> {{ c.occupation}}</td>
     </tr> 
     <tr>
 	    <td></td>
@@ -82,12 +84,10 @@
 	    <td class="spell" colspan="9"><b>Spells:</b> {% for sp in c.spell %} {{sp}},{% endfor %}</td>
     </tr>
     {% endif %}
-    <!--
     <tr>
 	    <td></td>
 	    <td class="equipment" colspan="9"><b>Equipment:</b> {% for e in c.equipment %} {{e}},{% endfor %}</td>
     </tr>
-    -->
     <tr> <td colspan="10"><hr/></td> </tr>
     {% endfor %}
 </table>
