@@ -56,20 +56,22 @@
         <td></td>
         <!-- <td class="appearence">{{ c.appearance }}, {{ c.personality }}</td> -->
     </tr> 
+    {% if c.system == 'Homebrew' %}
     <tr>
 	    <td></td>
 	    <td class="appearence" colspan="9"><b>Occupation: </b> {{ c.occupation}}</td>
     </tr> 
+    {% endif -%}
     <tr>
 	    <td></td>
 	    <td class="appearence" colspan="9"><b>Desc: </b> {{ c.appearance }}, {{ c.personality }}</td>
     </tr>
-    <!--
+    {% if c.system != 'Homebrew' %}
     <tr>
 	    <td></td>
 	    <td colspan="9"><b>Saves:</b> Poison {{c.saves.poison}} Wands {{c.saves.wands}} Petrify {{c.saves.stone}} Breath {{c.saves.breath}} Magic {{c.saves.magic}}</td>
     </tr>
-    -->
+    {% endif -%}
     {% if c.skills -%}
     <tr>
 	    <td></td>
