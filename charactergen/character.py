@@ -16,6 +16,10 @@ def _is_elf(INT, CON, DEX, STR):
 def _is_dwarf(INT, CON, DEX, STR):
     return CON > 11 and STR >= 9, characterclass.DWARF
 
+def _num_to_str(num):
+    if num > 0:
+        num = "+%d" % num
+    return str(num)
 
 class Character(BasicAttribRaceMixin, AppearenceMixin):
     """
@@ -31,6 +35,7 @@ class Character(BasicAttribRaceMixin, AppearenceMixin):
         super(Character, self).__init__(*args, **kwargs)
 
         self.character_class = self.get_character_class(classname)
+        self.level = 1
         self.class_name = self.character_class['name']
         self.personality = self.get_personality()
         if testing:
@@ -427,7 +432,43 @@ class LotFP_Homebrew_Character(LotFPCharacter):
             else:
                 equipment.append(equip)
 
-        return equipment
+        # assign equipment to slots
+        self.prime_hand = None
+        self.off_hand = None
+        self.ready_equipment = []
+        self.purse = []
+        backpack_equipment = []
+        for item in equipment:
+            check = item.lower()
+            print (item)
+            if "armor" in check or "clothing" in check:
+                self.worn = item
+            # figure out what to put in our hands
+            elif "spear" in check or "sword" in check or "dagger" in check\
+                    or "shield" in check or "torch" in check \
+                    or "mace" in check or "club" in check\
+                    or "axe" in check or "flail" in check\
+                    or "lantern" in check or "garotte" in check\
+                    or "holy" in check or "cross" in check or "pistol" in check\
+                    or "tools" in check or "pick" in check:
+                if self.prime_hand == None:
+                    self.prime_hand = item
+                elif self.off_hand == None:
+                    self.off_hand = item
+                else:
+                    # overflow
+                    self.ready_equipment.append(item)
+            elif " cp" in check or " sp" in check and "iron" not in check:
+                self.purse.append(item)
+            elif "bow" in check or "quiver" in check:
+                self.ready_equipment.append(item)
+            elif "pack" in check:
+                # these are containers
+                self.ready_equipment.append(item)
+            else:
+                backpack_equipment.append(item)
+
+        return backpack_equipment
 
     def roll_attribute_scores(self):
 
@@ -510,6 +551,10 @@ class LotFP_Homebrew_Character(LotFPCharacter):
             points_to_spend -= 1
         return skills
 
+    def get_sbonus(self, attr, val)->str: 
+        bonus = self.get_bonus(attr, val)
+        return _num_to_str(bonus) 
+
     def get_skills(self):
         
         skills = dict((s, x) for s, x in characterclass.HOMEBREW['skills'])
@@ -583,9 +628,10 @@ class LotFP_Homebrew_Character(LotFPCharacter):
             self.sneak_attack_dmg = '+1d6'
 
         # pass thru and make an array
-        skills = [(s, v) for s, v in skills.items()]
+        skills = [(s, _num_to_str(v)) for s, v in skills.items()]
 
         return skills
+
 
 
     def get_saves(self):
@@ -595,19 +641,19 @@ class LotFP_Homebrew_Character(LotFPCharacter):
         saves = {'poison': 0, 'wands': 0, 'stone': 0, 'breath': 0, 'magic': 0} 
 
         # Health
-        saves['poison'] = self.get_bonus(*self.attributes[characterclass.CON])
+        saves['poison'] = self.get_sbonus(*self.attributes[characterclass.CON])
 
         # Dodge
-        saves['wands'] = self.get_bonus(*self.attributes[characterclass.DEX])
+        saves['wands'] = self.get_sbonus(*self.attributes[characterclass.DEX])
 
         # Perception
-        saves['stone'] = self.get_bonus(*self.attributes[characterclass.INT])
+        saves['stone'] = self.get_sbonus(*self.attributes[characterclass.INT])
 
         # Willpower
-        saves['breath'] = self.get_bonus(*self.attributes[characterclass.WIS])
+        saves['breath'] = self.get_sbonus(*self.attributes[characterclass.WIS])
 
         # Fortitude
-        saves['magic'] = self.get_bonus(*self.attributes[characterclass.STR])
+        saves['magic'] = self.get_sbonus(*self.attributes[characterclass.STR])
 
         return saves
 

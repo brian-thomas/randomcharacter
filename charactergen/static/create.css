@@ -42,7 +42,7 @@ h3 {
 /* Content */
 
 #container {
-    width: 25em;
+    width: 40em;
     margin: 0 auto;
     padding: 1em 0;
 }
@@ -55,7 +55,7 @@ table {
     border-spacing: 0;
 }
 table td, table th {
-    width: 8em;
+    width: 13em;
     vertical-align: top;
     text-align: left;
     padding: 0;
@@ -64,10 +64,10 @@ table.attr {
     border-top: 1px solid #333;
 }
 table td.save {
-    width: 12em; /* Saving throw names are a bit long */
+    width: 19em; /* Saving throw names are a bit long */
 }
 table td.save + td {
-    width: 4em;
+    width: 6em;
 }
 table.weapon td {
     text-align: center;
@@ -80,10 +80,20 @@ p {
 }
 
 .block {
-    width: 11.5em;
+    width: 18em;
     padding: 0 0.5em;
     margin: 0;
     float: left;
+}
+
+table.saves {
+    border: 0;
+    padding: 0;
+}
+
+table.second_stats {
+    border: 0;
+    padding: 0;
 }
 
 table.skills {
@@ -93,7 +103,7 @@ table.skills {
 
 table.thief.skills td + td,
 table.thief.skills th + th {
-    width: 2em;
+    width: 3em;
 }
 
 ul {
@@ -104,6 +114,12 @@ ul {
 
 li p {
     margin: 0;
+}
+
+table.equipment td {
+    font-size: 0.9em;
+    border-bottom: 1px solid gray;
+    border: 0;
 }
 
 /* Small centered footer */

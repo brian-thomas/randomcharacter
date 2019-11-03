@@ -20,31 +20,49 @@
 </table>
 
 <table>
+  <tr><td>
+  <table class='saves'>
     <tr>
         <td class="save">{{ c.saves_with_names.poison.0}}</td>
         <td>{{ c.saves_with_names.poison.1}}</td>
-        <td>{% if c.hp %}<strong>HP</strong>: {{ c.hp }}{% else %}<strong>HD</strong>: {{ c.hd }}{% endif %}</td>
     </tr>
     <tr>
         <td class="save">{{ c.saves_with_names.wands.0}}</td>
         <td>{{ c.saves_with_names.wands.1}}</td>
-        <td><strong>AC</strong>: {{ c.ac }}</td>
     </tr>
     <tr>
         <td class="save">{{ c.saves_with_names.stone.0}}</td>
         <td>{{ c.saves_with_names.stone.1}}</td>
-        <td><strong>XP</strong>: 0 </td>
     </tr>
     <tr>
         <td class="save">{{ c.saves_with_names.breath.0}}</td>
         <td>{{ c.saves_with_names.breath.1}}</td>
-        <td></td>
     </tr>
     <tr>
         <td class="save">{{ c.saves_with_names.magic.0}}</td>
         <td>{{ c.saves_with_names.magic.1}}</td>
-        <td></td>
     </tr>
+  </table>
+	  </td>
+	  <td>
+  <table class='second_stats'>
+    <tr>
+	<td><strong>Level</strong>: {{c.level}}</td>
+    </tr>
+    <tr>
+        <td>{% if c.hp %}<strong>HP</strong>: {{ c.hp }}{% else %}<strong>HD</strong>: {{ c.hd }}{% endif %}</td>
+    </tr>
+    <tr>
+        <td><strong>AC</strong>: {{ c.ac }}</td>
+    </tr>
+    <tr>
+	<td><strong>Encumberance</strong>: 1/Light</td>
+    </tr>
+    <tr>
+	<td><strong>Move</strong>: 8'/round</td>
+    </tr>
+  </table>
+  </td></tr>
 </table>
 
 <table class="weapon">
@@ -70,12 +88,60 @@
 </table>
 
 <div id="extras">
+
+  {% if c.skills %}
+  <div class="block">
+      <h3>Skills</h3>
+      <table class="thief skills">
+          <tr>
+              <th>Skill</th><th>Bonus</th>
+          </tr>
+          {% for skill, chance in c.skills %}
+          <tr>
+              <td>{{ skill }}</td><td>{{ chance }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+      {% if c.sneak_attack %}
+      <h3>Sneak Attack ({{c.sneak_attack}})</h3>
+      <table class="thief skills">
+              <tr><td>On a Sneak Attack apply a +{{c.sneak_attack}} bonus to the attack roll and add {{ c.sneak_attack_dmg }}.</td></tr>
+      </table>
+      {% endif %}
+  </div>
+  {% endif %}
+
   <div class="block">
       <h3>Equipment</h3>
+      <table class="equipment">
+	<tr>
+		<td><i>Prime Hand: </i></td><td>{{c.prime_hand}}</td> 
+	</tr><tr>
+		<td><i>Off Hand: </i></td><td>{{c.off_hand}}</td> 
+	</tr><tr>
+		<td><i>Worn: </i></td><td>{{c.worn}}</td> 
+	</tr>
+      </table>
+      <i>Ready Equipment</i>
+      <table class="equipment">
+        {% for item in c.ready_equipment %}
+	<tr><td>{{ item }}</td></tr> 
+        {% endfor %}
+      </table>
+      <i>Backpack</i>
+      <table class="equipment">
+        {% for item in c.equipment %}
+	<tr><td>{{ item }}</td></tr> 
+        {% endfor %}
+      </table>
+      <i>Purse</i>
+      <table class="equipment">
+        {% for item in c.purse %}
+	<tr><td>{{ item }}</td></tr> 
+        {% endfor %}
+      </table>
+
       <ul>
-      {% for item in c.equipment %}
-          <li>{{ item }}</li>
-      {% endfor %}
       {% if c.grimoires %}
           {% for book, spells in c.grimoires %}
           <li>{{ book }}
@@ -99,27 +165,7 @@
   </div>
   {% endif %}
 
-  {% if c.skills %}
-  <div class="block">
-      <h3>Skills</h3>
-      <table class="thief skills">
-          <tr>
-              <th>Skill</th><th>Roll</th>
-          </tr>
-          {% for skill, chance in c.skills %}
-          <tr>
-              <td>{{ skill }}</td><td>{{ chance }}</td>
-          </tr>
-          {% endfor %}
-      </table>
-      {% if c.sneak_attack %}
-      <h3>Sneak Attack ({{c.sneak_attack}})</h3>
-      <table class="thief skills">
-	      <tr><td>On a Sneak Attack apply a +{{c.sneak_attack}} bonus to the attack roll and add {{ c.sneak_attack_dmg }}.</td></tr>
-      </table>
-      {% endif %}
-  </div>
-  {% elif c.class_name == 'Cleric' and not c.system == 'Beta LotFP' %}
+  {% if c.class_name == 'Cleric' %}
   <div class="block">
       <h3>Turn Undead</h3>
       <table class="skills">
