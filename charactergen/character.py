@@ -435,6 +435,7 @@ class LotFP_Homebrew_Character(LotFPCharacter):
         # assign equipment to slots
         self.prime_hand = None
         self.off_hand = None
+        self.worn = "Clothing"
         self.ready_equipment = []
         self.purse = []
         backpack_equipment = []
@@ -467,6 +468,32 @@ class LotFP_Homebrew_Character(LotFPCharacter):
                 self.ready_equipment.append(item)
             else:
                 backpack_equipment.append(item)
+
+        # calculate Encumbrance and move
+        self.encumbrance = 0
+        self.move = "8m/round"
+        if "chain" in self.worn.lower():
+            self.encumbrance += 1
+        elif "plate" in self.worn.lower():
+            self.encumbrance += 2
+
+        if len(self.ready_equipment) + 2 >= 5:
+            self.encumbrance += 1
+
+        if len(self.ready_equipment) + 2 >= 10:
+            self.encumbrance += 1
+
+        if self.race == "Dwarf":
+            self.encumbrance -= 1
+
+        if self.encumbrance < 0: self.encumbrance = 0
+        if self.encumbrance > 5: self.encumbrance = 5
+
+        move_str = ["8m/round", "8m/round", "6m/round", "4m/round", "2m/round", "0m/round"]
+        enc_str = ["Unencumbered", "Unencumbered", "Lightly", "Heavily", "Severely", "Over"]
+
+        self.move = move_str[self.encumbrance]
+        self.encumbrance = f"%d %s" % (self.encumbrance, enc_str[self.encumbrance])
 
         return backpack_equipment
 
