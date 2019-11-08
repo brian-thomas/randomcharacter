@@ -441,7 +441,6 @@ class LotFP_Homebrew_Character(LotFPCharacter):
         backpack_equipment = []
         for item in equipment:
             check = item.lower()
-            print (item)
             if "armor" in check or "clothing" in check:
                 self.worn = item
             # figure out what to put in our hands

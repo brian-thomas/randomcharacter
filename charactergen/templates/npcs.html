@@ -11,8 +11,7 @@
 
 <table class='npc'>
 	<thead>
-	    <tr/>
-<!--
+	    <tr>
 	        <th class="class">Class</th>
 	        <th class="attr">STR</th>
 	        <th class="attr">INT</th>
@@ -20,11 +19,9 @@
 	        <th class="attr">DEX</th>
 	        <th class="attr">CON</th>
 	        <th class="attr">CHA</th>
-	        <th class="attr">AC</th>
-	        <th class="attr">HP</th>
-		<th class="appearence">Appearance and Personality</th>
+	        <th class="attr"></th>
+	        <th class="attr"></th>
 		<th></th>
--->
 	    </tr>
 	</thead>
     {% for c in characters %}
@@ -54,7 +51,6 @@
         {% endif -%}
 	</td>
         <td></td>
-        <!-- <td class="appearence">{{ c.appearance }}, {{ c.personality }}</td> -->
     </tr> 
     {% if c.system == 'Homebrew' %}
     <tr>
@@ -77,7 +73,7 @@
 	    <td></td>
 	    <td class="skills" colspan="9"><b>Skills: </b> 
 		    {% for s in c.skills %} 
-		        {% if s.1 > 1 %}
+		        {% if s.1 != '0' %}
 		            {{s.0}} {{s.1}}, 
                         {% endif %}
 	            {% endfor %}
@@ -98,10 +94,5 @@
     {% endfor %}
 </table>
 
-<footer>
-    <p>
-        Site designed and built by <a href="http://funkaoshi.com">Ramanan Sivaranjan</a>. Check out more D&D stuff at <a href="http://save.vs.totalpartykill.ca">Save vs. Total Party Kill</a>. Random Personalities from this <a href="http://angband.oook.cz/steamband/CharacterTraits.pdf">random table</a>.If this site looks ugly, please let me know&mdash;unless you're using Internet Explorer.
-    </p>
-</footer>
 {% endblock %}
 
