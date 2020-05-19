@@ -2,15 +2,15 @@ import json
 
 from flask import request, Response, redirect, render_template, url_for, Flask
 
-import charactergen.adventuregame as adventuregame 
-import charactergen.character as character 
-import charactergen.characterclass as characterclass
-import charactergen.dangertime as dangertime
-import charactergen.dice as dice 
+import adventuregame
+import character
+import characterclass
+import dangertime
+import dice
 import charactergen.fifth as fifth
-import charactergen.mazerats as mazerats
-import charactergen.troika as troika 
-import charactergen.demoncity as demoncity
+import mazerats
+import troika
+import demoncity
 
 DEBUG = True
 
@@ -28,8 +28,7 @@ SYSTEMS = {
     'carcosa': character.CarcosaCharacter,
     'moc': character.MastersOfCarcosaCharacter,
     'dd': character.DelvingDeeperCharacter,
-    'lotfp': character.LotFPCharacter,
-    'homebrew': character.LotFP_Homebrew_Character
+    'lotfp': character.LotFPCharacter
 }
 
 
@@ -103,6 +102,7 @@ def generate_npcs(number, system, fmt):
     if number > 1000:
         number = 1000
 
+    # characters = [character.BasicCharacter(testing=True) for _ in range(number)]
     characters = [_generate_char(system) for _ in range(number)]
 
     dparams = _get_display_params(fmt)
@@ -113,6 +113,7 @@ def generate_npcs(number, system, fmt):
     else:
         content = render_template("npcs.html", characters=characters)
 
+    #return render_template("npcs.html", characters=characters)
     return content
 
 @app.route('/')
@@ -133,7 +134,7 @@ def _generate_char(system):
     c = get_class(request.args.get('class'))
     return system(classname=c)
 
-def _get_display_params(fmt, system=None):
+def _get_display_params(fmt):
     if fmt == "text":
         template = "plaintext.txt"
         mimetype = "text/plain"
@@ -145,12 +146,8 @@ def _get_display_params(fmt, system=None):
         mimetype = "application/json"
     else:
         # default to HTML for unknown display formats
+        template = "index.html"
         mimetype = "text/html"
-
-        if system == "homebrew": 
-            template = "homebrew.html"
-        else:
-            template = "index.html"
 
     return {'mimetype':mimetype, 'template' : template}
 
@@ -162,7 +159,7 @@ def generate(system, fmt):
     if not char:
         return redirect(url_for('generate', system='basic', fmt=fmt))
 
-    dparams = _get_display_params(fmt, system)
+    dparams = _get_display_params(fmt)
 
     if fmt == "json":
         content = json.dumps(char.to_dict())
@@ -181,6 +178,7 @@ def get_class(classname):
     if classname not in characterclass.VALID_CLASS_NAMES:
         return None
     return classname
+
 
 #
 # base64.b64encode(pickle.dumps(context))

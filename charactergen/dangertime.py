@@ -6,8 +6,8 @@ http://gamepieces.blogspot.ca/2013/09/character-generators-for-weird-dark-ages.h
 import itertools
 import random
 
-import charactergen.mixins as mixins
-import charactergen.dice as dice
+import mixins
+import dice
 
 
 class Character(mixins.BasicAttributesMixin, mixins.AppearenceMixin):
