@@ -1,5 +1,5 @@
 import random
-from charactergen.dice import d, xdy
+from dice import d, xdy
 
 class Character(object):
         

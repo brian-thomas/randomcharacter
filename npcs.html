@@ -19,15 +19,20 @@
 	        <th class="attr">DEX</th>
 	        <th class="attr">CON</th>
 	        <th class="attr">CHA</th>
-	        <th class="attr"></th>
-	        <th class="attr"></th>
+	        <th class="attr">AC</th>
+	        <th class="attr">HP</th>
+		<th class="appearence">Appearance and Personality</th>
 		<th></th>
 	    </tr>
 	</thead>
     {% for c in characters %}
     <tr> <td colspan="10"><hr/></td> </tr>
     <tr>
-	<td class="class">{{ c.race }} {{c.class_name}}</td>
+        {% if c.system == 'Homebrew' %}
+	   <td class="class">{{ c.race }} {{c.class_name}}</td>
+        {% else -%}
+	   <td class="class">{{c.class_name}}</td>
+        {% endif -%}
 	<td class="attr"><b>STR</b> {{ c.attr.STR }}</td>
 	<td class="attr"><b>INT</b> {{ c.attr.INT }}</td>
 	<td class="attr"><b>WIS</b> {{ c.attr.WIS }}</td>
@@ -47,23 +52,30 @@
         {% endif -%}
 	</td>
         <td></td>
+        <!-- <td class="appearence">{{ c.appearance }}, {{ c.personality }}</td> -->
     </tr> 
+    {% if c.system == 'Homebrew' %}
+    <tr>
+	    <td></td>
+	    <td class="appearence" colspan="9"><b>Occupation: </b> {{ c.occupation}}</td>
+    </tr> 
+    {% endif -%}
     <tr>
 	    <td></td>
 	    <td class="appearence" colspan="9"><b>Desc: </b> {{ c.appearance }}, {{ c.personality }}</td>
     </tr>
-    <!--
+    {% if c.system != 'Homebrew' %}
     <tr>
 	    <td></td>
 	    <td colspan="9"><b>Saves:</b> Poison {{c.saves.poison}} Wands {{c.saves.wands}} Petrify {{c.saves.stone}} Breath {{c.saves.breath}} Magic {{c.saves.magic}}</td>
     </tr>
-    -->
+    {% endif -%}
     {% if c.skills -%}
     <tr>
 	    <td></td>
 	    <td class="skills" colspan="9"><b>Skills: </b> 
 		    {% for s in c.skills %} 
-		        {% if s.1 != '0' %}
+		        {% if s.1 > 1 %}
 		            {{s.0}} {{s.1}}, 
                         {% endif %}
 	            {% endfor %}

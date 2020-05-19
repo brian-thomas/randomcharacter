@@ -1,7 +1,7 @@
 import random
 
-import charactergen.characterclass as characterclass
-from charactergen.dice import d, xdy
+import characterclass
+from dice import d, xdy
 
 
 class BasicAttributesMixin(object):
@@ -71,21 +71,6 @@ class BasicAttributesMixin(object):
         if bonus:
             return "%d (%+d)" % (val, bonus)
         return "%d" % val
-
-
-class BasicAttribRaceMixin(BasicAttributesMixin):
-
-    def __init__(self, *args, **kwargs):
-
-        # randomize race
-        races = ['Human', 'Human', 'Elf', 'Dwarf', 'Halfling']
-        self._race = random.choice(races)
-
-        super(BasicAttribRaceMixin, self).__init__(*args, **kwargs)
-
-    @property
-    def race (self):
-        return self._race
 
 
 class AppearenceMixin(object):
