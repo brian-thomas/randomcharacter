@@ -3,6 +3,7 @@ from charactergen.fifth.backgrounds import Background
 from charactergen.fifth.race import Race
 from charactergen.fifth.processor import CharacterProcessor
 
+
 class Attributes(CharacterProcessor):
     """ Takes an empty character and adds D&D attributes. """
 
@@ -15,6 +16,8 @@ class Attributes(CharacterProcessor):
         self.character.attributes = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA']
         self.character.scores = dict((a, self.roll_attribute())
                                      for a in self.character.attributes)
+
+
 
 class Bonuses(CharacterProcessor):
     def get_bonus(self, score):

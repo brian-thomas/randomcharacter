@@ -1,7 +1,7 @@
 import collections
 import sys
 
-import charactergen.character as character
+import character
 
 iterations = int(sys.argv[1])
 

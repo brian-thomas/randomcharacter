@@ -72,7 +72,6 @@ class BasicAttributesMixin(object):
             return "%d (%+d)" % (val, bonus)
         return "%d" % val
 
-
 class BasicAttribRaceMixin(BasicAttributesMixin):
 
     def __init__(self, *args, **kwargs):

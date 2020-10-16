@@ -4,6 +4,7 @@ import random
 import charactergen.mixins as mixins
 import charactergen.dice as dice
 
+
 class Character(object):
 
     def __init__(self, *args, **kwargs):
