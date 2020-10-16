@@ -1,7 +1,7 @@
-from dice import d
-from fifth.backgrounds import Background
-from fifth.race import Race
-from fifth.processor import CharacterProcessor
+from charactergen.dice import d
+from charactergen.fifth.backgrounds import Background
+from charactergen.fifth.race import Race
+from charactergen.fifth.processor import CharacterProcessor
 
 
 class Attributes(CharacterProcessor):

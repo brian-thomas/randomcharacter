@@ -1,6 +1,6 @@
 import random
 
-from fifth.processor import CharacterProcessor
+from charactergen.fifth.processor import CharacterProcessor
 
 class Race(CharacterProcessor):
     def process(self):

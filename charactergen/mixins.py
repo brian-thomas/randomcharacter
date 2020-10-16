@@ -1,7 +1,7 @@
 import random
 
-import characterclass
-from dice import d, xdy
+import charactergen.characterclass as characterclass
+from charactergen.dice import d, xdy
 
 
 class BasicAttributesMixin(object):
