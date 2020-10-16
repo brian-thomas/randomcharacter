@@ -2,6 +2,7 @@ import json
 
 from flask import request, Response, redirect, render_template, url_for, Flask
 
+<<<<<<< HEAD
 import charactergen.adventuregame as adventuregame
 import charactergen.character as character
 import charactergen.characterclass as characterclass
@@ -11,6 +12,17 @@ import charactergen.fifth as fifth
 import charactergen.mazerats as mazerats
 import charactergen.troika as troika
 import charactergen.demoncity as demoncity
+=======
+import adventuregame
+import character
+import characterclass
+import dangertime
+import dice
+import charactergen.fifth as fifth
+import mazerats
+import troika
+import demoncity
+>>>>>>> 8f6d305... update to run in heroku
 
 DEBUG = True
 
