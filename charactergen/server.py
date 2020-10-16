@@ -28,7 +28,8 @@ SYSTEMS = {
     'carcosa': character.CarcosaCharacter,
     'moc': character.MastersOfCarcosaCharacter,
     'dd': character.DelvingDeeperCharacter,
-    'lotfp': character.LotFPCharacter
+    'lotfp': character.LotFPCharacter,
+    'homebrew': character.LotFP_Homebrew_Character
 }
 
 
@@ -102,7 +103,6 @@ def generate_npcs(number, system, fmt):
     if number > 1000:
         number = 1000
 
-    # characters = [character.BasicCharacter(testing=True) for _ in range(number)]
     characters = [_generate_char(system) for _ in range(number)]
 
     dparams = _get_display_params(fmt)
@@ -113,7 +113,6 @@ def generate_npcs(number, system, fmt):
     else:
         content = render_template("npcs.html", characters=characters)
 
-    #return render_template("npcs.html", characters=characters)
     return content
 
 @app.route('/')
@@ -134,7 +133,7 @@ def _generate_char(system):
     c = get_class(request.args.get('class'))
     return system(classname=c)
 
-def _get_display_params(fmt):
+def _get_display_params(fmt, system=None):
     if fmt == "text":
         template = "plaintext.txt"
         mimetype = "text/plain"
@@ -146,8 +145,12 @@ def _get_display_params(fmt):
         mimetype = "application/json"
     else:
         # default to HTML for unknown display formats
-        template = "index.html"
         mimetype = "text/html"
+
+        if system == "homebrew": 
+            template = "homebrew.html"
+        else:
+            template = "index.html"
 
     return {'mimetype':mimetype, 'template' : template}
 
@@ -159,7 +162,7 @@ def generate(system, fmt):
     if not char:
         return redirect(url_for('generate', system='basic', fmt=fmt))
 
-    dparams = _get_display_params(fmt)
+    dparams = _get_display_params(fmt, system)
 
     if fmt == "json":
         content = json.dumps(char.to_dict())
@@ -178,7 +181,6 @@ def get_class(classname):
     if classname not in characterclass.VALID_CLASS_NAMES:
         return None
     return classname
-
 
 #
 # base64.b64encode(pickle.dumps(context))

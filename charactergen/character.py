@@ -3,7 +3,7 @@ import operator
 import random
 
 import charactergen.characterclass as characterclass 
-from charactergen.mixins import BasicAttributesMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
+from charactergen.mixins import BasicAttributesMixin, BasicAttribRaceMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
 from charactergen.dice import d, xdy
 
 
@@ -343,7 +343,7 @@ class LotFPCharacter(AscendingAcMixin, Character):
     def get_languages(self): return []
 
 
-class LotFP_Homebrew_Character(LotFPCharacter):
+class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
     """ Alternative model for our homebrew campaign.
     """ 
 
@@ -585,6 +585,15 @@ class LotFP_Homebrew_Character(LotFPCharacter):
         
         skills = dict((s, x) for s, x in characterclass.HOMEBREW['skills'])
 
+        str_bonus = self.get_bonus(*self.attributes[characterclass.STR])
+        dex_bonus = self.get_bonus(*self.attributes[characterclass.DEX])
+        int_bonus = self.get_bonus(*self.attributes[characterclass.INT])
+        cha_bonus = self.get_bonus(*self.attributes[characterclass.CHA])
+
+
+        # everyone gets 1 + Int Bonus to spend on any skill. 
+        add_skill_points = max(int_bonus+1, 0)
+
         # deal with class-based skill tailoring 
         if self.character_class == characterclass.THIEF:
             skills['Sneak Attack'] = 0
@@ -623,11 +632,6 @@ class LotFP_Homebrew_Character(LotFPCharacter):
             # m-us get an extra spell, others get 5 rando points in skills
             add_skill_points += 5
 
-        str_bonus = self.get_bonus(*self.attributes[characterclass.STR])
-        dex_bonus = self.get_bonus(*self.attributes[characterclass.DEX])
-        int_bonus = self.get_bonus(*self.attributes[characterclass.INT])
-        cha_bonus = self.get_bonus(*self.attributes[characterclass.CHA])
-
         # set some defaults on core skills
         # We dont adopt a setting a minimum of '0' except for social skill
         skills['Athletics'] = skills['Athletics'] + max(str_bonus, dex_bonus)
@@ -636,9 +640,6 @@ class LotFP_Homebrew_Character(LotFPCharacter):
         skills['Search'] = skills['Search'] + int_bonus
         skills['Stealth'] = skills['Stealth'] + dex_bonus
         skills['Social'] = max(skills['Social'] + cha_bonus, 0)
-
-        # everyone gets 1 + Int Bonus to spend on any skill. 
-        add_skill_points = max(int_bonus+1, 0)
 
         # apportion all remaining skill points randomly
         skill_names = list(skills.keys()) 
