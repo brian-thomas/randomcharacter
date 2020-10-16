@@ -3,7 +3,7 @@ import operator
 import random
 
 import charactergen.characterclass as characterclass 
-from charactergen.mixins import BasicAttribRaceMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
+from charactergen.mixins import BasicAttributesMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
 from charactergen.dice import d, xdy
 
 
@@ -21,7 +21,7 @@ def _num_to_str(num):
         num = "+%d" % num
     return str(num)
 
-class Character(BasicAttribRaceMixin, AppearenceMixin):
+class Character(BasicAttributesMixin, AppearenceMixin):
     """
     D&D characters are structurally quite similar. Common aspects of character
     creation are managed here. Subclasses for the different systems handle
