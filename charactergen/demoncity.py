@@ -2,14 +2,8 @@ import itertools
 import math
 import random
 
-<<<<<<< HEAD
 import charactergen.mixins as mixins
 import charactergen.dice as dice
-=======
-import mixins
-import dice
->>>>>>> 8f6d305... update to run in heroku
-
 
 class Character(mixins.AppearenceMixin):
 

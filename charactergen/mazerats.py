@@ -1,10 +1,8 @@
 import itertools
 import random
 
-import mixins
-import dice
-
-
+import charactergen.mixins as mixins
+import charactergen.dice as dice
 
 class Character(object):
 
