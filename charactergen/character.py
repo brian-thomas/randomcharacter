@@ -594,27 +594,34 @@ class LotFP_Homebrew_Character(LotFPCharacter):
             skills = LotFP_Homebrew_Character._randomize_skills(skills, thief_skills, 10)
 
         if self.character_class == characterclass.CLERIC:
-            skills['Theology'] = 3
+            v = random.sample([2,3],2)
+            skills['Theology'] = v[0]
+            skills['Languages'] = v[1]
 
         if self.character_class == characterclass.MAGICUSER:
-            skills['Arcana'] = 3
+            v = random.sample([2,3],2)
+            skills['Arcana'] = v[0]
+            skills['Languages'] = v[1]
 
         if self.character_class == characterclass.FIGHTER:
-            skills['Armory'] = 3
-            skills['Athletics'] = 3
+            # distribute 5 points randomly
+            v = random.sample([1,2,2],3)
+            skills['Armory'] = v[0] 
+            skills['Athletics'] = v[1]
+            skills['Open Doors'] = v[2]
 
         # bump up skills for some races
         if self.race == 'Dwarf':
             dwarf_skills = ['Armory', 'Architecture']
-            skills = LotFP_Homebrew_Character._randomize_skills(skills, dwarf_skills, 6)
+            skills = LotFP_Homebrew_Character._randomize_skills(skills, dwarf_skills, 5)
 
         if self.race == 'Halfling':
             halfling_skills = ['Bushcraft', 'Stealth']
-            skills = LotFP_Homebrew_Character._randomize_skills(skills, halfling_skills, 6)
+            skills = LotFP_Homebrew_Character._randomize_skills(skills, halfling_skills, 5)
 
         if self.race == 'Human' and self.character_class != characterclass.MAGICUSER:
             # m-us get an extra spell, others get 5 rando points in skills
-            skills = LotFP_Homebrew_Character._randomize_skills(skills, list(skills.keys()), 5)
+            add_skill_points += 5
 
         str_bonus = self.get_bonus(*self.attributes[characterclass.STR])
         dex_bonus = self.get_bonus(*self.attributes[characterclass.DEX])
@@ -632,9 +639,6 @@ class LotFP_Homebrew_Character(LotFPCharacter):
 
         # everyone gets 1 + Int Bonus to spend on any skill. 
         add_skill_points = max(int_bonus+1, 0)
-
-        if self.race == 'Human':
-            add_skill_points += 5
 
         # apportion all remaining skill points randomly
         skill_names = list(skills.keys()) 
