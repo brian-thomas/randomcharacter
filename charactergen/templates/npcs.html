@@ -19,7 +19,7 @@
     {% for c in characters %}
     <tr> <td colspan="10"><hr/></td> </tr>
     <tr>
-        {% if c.system == 'homebrew' %}
+        {% if c.system == 'Homebrew' %}
 	   <td class="class">{{ c.race }} {{c.class_name}}</td>
         {% else -%}
 	   <td class="class">{{c.class_name}}</td>
@@ -44,7 +44,7 @@
 	</td>
         <td></td>
     </tr> 
-    {% if c.system == 'homebrew' %}
+    {% if c.system == 'Homebrew' %}
     <tr>
 	    <td></td>
 	    <td class="appearence" colspan="9"><b>Occupation: </b> {{ c.occupation}}</td>
@@ -54,7 +54,7 @@
 	    <td></td>
 	    <td class="appearence" colspan="9"><b>Desc: </b> {{ c.appearance }}, {{ c.personality }}</td>
     </tr>
-    {% if c.system != 'homebrew' %}
+    {% if c.system != 'Homebrew' %}
     <tr>
 	    <td></td>
 	    <td colspan="9"><b>Saves:</b> Poison {{c.saves.poison}} Wands {{c.saves.wands}} Petrify {{c.saves.stone}} Breath {{c.saves.breath}} Magic {{c.saves.magic}}</td>

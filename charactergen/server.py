@@ -111,7 +111,7 @@ def generate_npcs(number, system, fmt):
         content = json.dumps([ c.to_dict() for c in characters])
         return Response(content, status=200, mimetype=dparams['mimetype'])
     else:
-        content = render_template("npcs.html", characters=characters)
+        content = render_template("npcs.html", characters=characters, system=system)
 
     return content
 
