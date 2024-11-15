@@ -351,6 +351,10 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
     def system(self): return "Homebrew"
 
     @property
+    def initiative_bonus(self):
+        return self.get_bonus(*self.attributes[characterclass.DEX])
+
+    @property
     def melee_attack_bonus(self):
         bonus = self.get_bonus(*self.attributes[characterclass.STR])
         bonus += self.attack_bonus
