@@ -380,6 +380,27 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         return bonus
 
     @property
+    def ready_items_allowed(self):
+        ready_items_by_dex = {'3': 1, '4': 2, '6': 5, '9': 10, '13': 15, '16': 20, '18': 25 } 
+        dex = self.attributes[characterclass.DEX][1]
+
+        ready_items_allowed = 0
+        for ri_dex, ri_allowed in ready_items_by_dex.items():
+            v = int(ri_dex)
+            if dex >= v:
+                ready_items_allowed = ri_allowed
+
+        return ready_items_allowed
+
+    @property
+    def backpack_items_allowed(self):
+        return 5 # small backpack only 
+
+    @property
+    def backpack_name(self):
+        return "Small Backpack"
+
+    @property
     def save_name_table(self):
         return characterclass.HOMEBREW['saves']
 

@@ -123,13 +123,14 @@
 		<td><i>Worn: </i></td><td>{{c.worn}}</td> 
 	</tr>
       </table>
-      <i>Ready Equipment</i>
+
+      <i>Ready Equipment ({{c.ready_items_allowed}} items max)</i>
       <table class="equipment">
         {% for item in c.ready_equipment %}
 	<tr><td>{{ item }}</td></tr> 
         {% endfor %}
       </table>
-      <i>Backpack</i>
+      <i>{{c.backpack_name}} ({{c.backpack_items_allowed}} items max)</i>
       <table class="equipment">
         {% for item in c.equipment %}
 	<tr><td>{{ item }}</td></tr> 
