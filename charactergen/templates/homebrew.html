@@ -3,7 +3,7 @@
 {% block content %}
 <h2 class="system"> {{ c.system }}</h2>
 <h1>{{ c.race }} {{ c.class_name }}</h1>
-<h2 class="appearence">{{ c.appearance }}</h2>
+<!--h2 class="appearence">{{ c.appearance }}</h2-->
 <h2 class="occupation">{{ c.occupation}}</h2>
 
 <table class="attr">
@@ -109,6 +109,19 @@
               <tr><td>On a Sneak Attack apply a +{{c.sneak_attack}} bonus to the attack roll and add {{ c.sneak_attack_dmg }}.</td></tr>
       </table>
       {% endif %}
+
+      {% if c.grimoires %}
+          {% for book, spells in c.grimoires %}
+          <li>{{ book }}
+              <ul>
+                  {% for spell in spells %}
+                  <li>{{ spell }}</li>
+                  {% endfor %}
+              </ul>
+          </li>
+          {% endfor %}
+      {% endif %}
+
   </div>
   {% endif %}
 
@@ -130,9 +143,15 @@
 	<tr><td>{{ item }}</td></tr> 
         {% endfor %}
       </table>
-      <i>{{c.backpack_name}} ({{c.backpack_items_allowed}} items max)</i>
+      <i>{{c.pack_name}} ({{c.pack_items_allowed}} items max)</i>
       <table class="equipment">
         {% for item in c.equipment %}
+	<tr><td>{{ item }}</td></tr> 
+        {% endfor %}
+      </table>
+      <i>Non-encumbering items carried</i>
+      <table class="equipment">
+        {% for item in c.non_enc_equipment %}
 	<tr><td>{{ item }}</td></tr> 
         {% endfor %}
       </table>
@@ -143,19 +162,6 @@
         {% endfor %}
       </table>
 
-      <ul>
-      {% if c.grimoires %}
-          {% for book, spells in c.grimoires %}
-          <li>{{ book }}
-              <ul>
-                  {% for spell in spells %}
-                  <li>{{ spell }}</li>
-                  {% endfor %}
-              </ul>
-          </li>
-          {% endfor %}
-      {% endif %}
-      </ul>
   </div>
 
   {% if c.retainer %}

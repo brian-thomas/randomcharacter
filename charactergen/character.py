@@ -352,7 +352,10 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
     @property
     def initiative_bonus(self):
-        return self.get_bonus(*self.attributes[characterclass.DEX])
+        bonus = self.get_bonus(*self.attributes[characterclass.DEX])
+        if bonus > 0:
+            bonus = "+%d" % bonus
+        return bonus
 
     @property
     def melee_attack_bonus(self):
@@ -390,15 +393,28 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             if dex >= v:
                 ready_items_allowed = ri_allowed
 
+        # subtract for the equipment in hand
+        if self.prime_hand != None:
+            ready_items_allowed -= 1
+        if self.off_hand != None:
+            ready_items_allowed -= 1
+
         return ready_items_allowed
 
     @property
-    def backpack_items_allowed(self):
-        return 5 # small backpack only 
+    def pack_items_allowed(self):
+        packname = self.pack_name.lower()
+        if "sack" in packname:
+            return 3
+        elif "small backpack" in packname:
+            return 5 
+        elif "backpack" in packname:
+            return 10 
+        return 0
 
     @property
-    def backpack_name(self):
-        return "Small Backpack"
+    def pack_name(self):
+        return self.packname
 
     @property
     def save_name_table(self):
@@ -444,12 +460,29 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         occupations = characterclass.HOMEBREW['occupations']
         return occupations[self.occupation]
 
+    def is_two_handed_item(self, item):
+        two_handed_items = ["staff", "greatsword", "bow", "pole", "garotte"]
+        for check in two_handed_items:
+            if check in item:
+                return True
+        return False
+
     def get_equipment(self):
         equipment = super().get_equipment()
 
+        self.non_enc_equipment = []
+        non_enc_items = xdy(1,3)-1
+        while (non_enc_items>0):
+            new_item = characterclass.LOTFP['non_enc_equipment'][xdy(1,20)-1] 
+            if new_item not in self.non_enc_equipment:
+                self.non_enc_equipment.append(new_item)
+            non_enc_items -= 1
+
+        if self.class_name == "Cleric":
+            self.non_enc_equipment.append("Wooden Holy Symbol")
+
         # Add any extra equipment from occupation
         occupation = self.get_occupation()
-        
         for equip in occupation['equip']:
             if equip in equipment:
                 # give them 1d6 x 10 sp instead
@@ -460,51 +493,89 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         # assign equipment to slots
         self.prime_hand = None
         self.off_hand = None
+        self.packname = None
         self.worn = "Clothing"
-        self.ready_equipment = []
         self.purse = []
-        backpack_equipment = []
+        self.ready_equipment = []
+        pack_equipment = []
         for item in equipment:
             check = item.lower()
             if "armor" in check or "clothing" in check:
                 self.worn = item
             # figure out what to put in our hands
-            elif "spear" in check or "sword" in check or "dagger" in check\
-                    or "shield" in check or "torch" in check \
-                    or "mace" in check or "club" in check\
+            elif "spear" in check or "bow" in check or "staff" in check or "pole" in check\
+                    or "sword" in check or "pistol" in check\
+                    or "mace" in check or "club" in check or "hammer" in check\
                     or "axe" in check or "flail" in check\
-                    or "lantern" in check or "garotte" in check\
-                    or "holy" in check or "cross" in check or "pistol" in check\
-                    or "tools" in check or "pick" in check:
+                    or "dagger" in check or "athame" in check or "knife" in check\
+                    or "buckler" in check or "shield" in check\
+                    or "holy" in check or "symbol" in check\
+                    or "garotte" in check or "pick" in check\
+                    or "lamp" in check or "lantern" in check or "torch" in check\
+                    or "musical" in check:
                 if self.prime_hand == None:
                     self.prime_hand = item
+                    if self.is_two_handed_item(item):
+                        self.off_hand = item
                 elif self.off_hand == None:
-                    self.off_hand = item
+                    if not self.is_two_handed_item(item):
+                        self.off_hand = item
+                    else:
+                        self.ready_equipment.append(item)
                 else:
                     # overflow
                     self.ready_equipment.append(item)
             elif " cp" in check or " sp" in check and "iron" not in check:
                 self.purse.append(item)
-            elif "bow" in check or "quiver" in check:
+            elif "quiver" in check or "specialist tool" in check or "waterskin" in check:
+                # tools/items which are always in the ready list
                 self.ready_equipment.append(item)
-            elif "pack" in check:
+            elif "pack" in check or "sack" in check or "scroll case" in check:
                 # these are containers
-                self.ready_equipment.append(item)
+                # they dont go in the ready equipment list
+                if self.pack_name == None:
+                    self.packname = item 
             else:
-                backpack_equipment.append(item)
+                pack_equipment.append(item)
+
+        # fix going over on items in ready or container slots
+
+        # first our pack. Any excess here goes onto ready equipment
+        max_pack = self.pack_items_allowed
+        pack_size = len(pack_equipment)
+        if pack_size > max_pack:
+            excess_pack_items = pack_equipment[max_pack:pack_size]
+            pack_equipment = pack_equipment[0:max_pack-1]
+            self.ready_equipment.extend(excess_pack_items)
+
+        # now check that the ready equipment list isn't too big (because of Char Dex):w
+        # drop/remove all equipment at end of list if it is
+        max_ready = self.ready_items_allowed
+        if len(self.ready_equipment) > max_ready:
+            self.ready_equipment = self.ready_equipment[0:max_ready-1]
 
         # calculate Encumbrance and move
         self.encumbrance = 0
-        self.move = "8m/round"
+        self.move = "6m/round"
         if "chain" in self.worn.lower():
             self.encumbrance += 1
         elif "plate" in self.worn.lower():
             self.encumbrance += 2
 
+        if "large" in self.pack_name.lower():
+            # large backpack adds 1
+            self.encumbrance += 1
+
         if len(self.ready_equipment) + 2 >= 5:
             self.encumbrance += 1
 
         if len(self.ready_equipment) + 2 >= 10:
+            self.encumbrance += 1
+
+        if len(self.ready_equipment) + 2 >= 15:
+            self.encumbrance += 1
+
+        if len(self.ready_equipment) + 2 >= 20:
             self.encumbrance += 1
 
         if self.race == "Dwarf":
@@ -513,13 +584,13 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         if self.encumbrance < 0: self.encumbrance = 0
         if self.encumbrance > 5: self.encumbrance = 5
 
-        move_str = ["8m/round", "8m/round", "6m/round", "4m/round", "2m/round", "0m/round"]
+        move_str = ["6m/round", "6m/round", "4m/round", "2m/round", "1m/round", "0m/round"]
         enc_str = ["Unencumbered", "Unencumbered", "Lightly", "Heavily", "Severely", "Over"]
 
         self.move = move_str[self.encumbrance]
         self.encumbrance = f"%d %s" % (self.encumbrance, enc_str[self.encumbrance])
 
-        return backpack_equipment
+        return pack_equipment
 
     def roll_attribute_scores(self):
 
