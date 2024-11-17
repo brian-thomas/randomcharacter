@@ -41,6 +41,9 @@
         {% if c.ranged_attack_bonus -%}
 		<b>RB</b> {{ c.ranged_attack_bonus }}
         {% endif -%}
+        {% if c.initiative_bonus -%}
+		<b>Init</b> {{ c.initiative_bonus }}
+        {% endif -%}
 	</td>
         <td></td>
     </tr> 
@@ -80,7 +83,23 @@
     {% endif %}
     <tr>
 	    <td></td>
-	    <td class="equipment" colspan="9"><b>Equipment:</b> {% for e in c.equipment %} {{e}},{% endfor %}</td>
+	    <td class="equipment" colspan="9"><b>Equipment:</b> 
+                    {% if c.prime_hand -%}
+		      {{c.prime_hand}}, 
+                    {% endif %}
+                    {% if c.off_hand -%}
+		      {{c.off_hand}}, 
+                    {% endif %}
+		    {% for e in c.ready_equipment %} 
+		      {{e}},
+		    {% endfor %}
+                    {% if c.pack_name -%}
+		      {{c.pack_name}},
+                    {% endif %}
+		    {% for e in c.equipment %} 
+		      {{e}},
+		    {% endfor %}
+	    </td>
     </tr>
     <tr> <td colspan="10"><hr/></td> </tr>
     {% endfor %}

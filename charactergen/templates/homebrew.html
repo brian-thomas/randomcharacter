@@ -42,6 +42,10 @@
         <td class="save">{{ c.saves_with_names.magic.0}}</td>
         <td>{{ c.saves_with_names.magic.1}}</td>
     </tr>
+    <tr>
+        <td class="save">{{ c.saves_with_names.ego.0}}</td>
+        <td>{{ c.saves_with_names.ego.1}}</td>
+    </tr>
   </table>
 	  </td>
 	  <td>
@@ -109,18 +113,32 @@
               <tr><td>On a Sneak Attack apply a +{{c.sneak_attack}} bonus to the attack roll and add {{ c.sneak_attack_dmg }}.</td></tr>
       </table>
       {% endif %}
-
-      {% if c.grimoires %}
-          {% for book, spells in c.grimoires %}
-          <li>{{ book }}
-              <ul>
-                  {% for spell in spells %}
-                  <li>{{ spell }}</li>
-                  {% endfor %}
-              </ul>
-          </li>
-          {% endfor %}
+      {% if c.spell %}
+      <h3>Spells</h3>
+      <table class="thief skills">
+	<!--tr><td><strong>Level 1</strong></td><td></td></tr-->
+	<tr><th>Casting DC</th><th>Name</th></tr>
+        {% for spell in c.spell %}
+	    <tr>
+		  <td style="width: 30%;">11</td><td style="text-align: left;">{{ spell }}</td>
+	    </tr>
+        {% endfor %}
+      </table>
       {% endif %}
+      {% if c.class_name == 'Cleric' %}
+      <h3>Turn Undead</h3>
+      <table class="skills">
+          <tr>
+              <th>Undead</th><th>Roll</th>
+          </tr>
+          {% for undead, roll in c.character_class.turn %}
+          <tr>
+              <td>{{ undead }}</td><td>{{ roll }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+      {% endif %}
+
 
   </div>
   {% endif %}
@@ -173,37 +191,6 @@
   </div>
   {% endif %}
 
-  {% if c.class_name == 'Cleric' %}
-  <div class="block">
-      <h3>Turn Undead</h3>
-      <table class="skills">
-          <tr>
-              <th>Undead</th><th>Roll</th>
-          </tr>
-          {% for undead, roll in c.character_class.turn %}
-          <tr>
-              <td>{{ undead }}</td><td>{{ roll }}</td>
-          </tr>
-          {% endfor %}
-      </table>
-  </div>
-  {% endif %}
-
-  {% if c.spell %}
-  <div class="block">
-      <h3>Spells</h3>
-      <ul>
-          <li><strong>Level 1</strong>:
-              <ul>
-                  {% for spell in c.spell %}
-                  <li>{{ spell }}</li>
-                  {% endfor %}
-              </ul>
-          </li>
-      </ul>
-  </div>
-  {% endif %}
-
   {% if c.languages|length > 1 %}
   <div class="block">
       <h3>Languages</h3>
@@ -230,6 +217,7 @@
 -->
 
 <footer>
+	<!--
     <p>
     You can also generate <strong><a href="/lbb">1974 D&D characters</a></strong>, <strong><a href="/holmes">Holmes D&D characters</a></strong> and <strong><a href="/lotfp">Lamentations of the Flame Princess</a></strong>. Add "text" to the end of a URL to get a <a href="/text">plaintext character sheet</a>. If you are a programmer adding "json" to the end of the URL gives you a <a href="/basic/json">JSON dictionary<a>. You can also generate OD&D characters suitable for the campaign worlds of <strong><a href='/pahvelorn'>Pahvelorn</a></strong>, <strong><a href="/apolyon">Apolyon</a></strong>, and <strong><a href='/carcosa/'>Carcosa</a></strong>.
     </p>
@@ -243,5 +231,6 @@
     <p>
         If this site looks ugly, please let me know&mdash;unless you're using Internet Explorer. <a href="https://github.com/funkaoshi/randomcharacter">This is an open source project.</a>
     </p>
+	-->
 </footer>
 {% endblock %}
