@@ -1,6 +1,7 @@
 import copy
 import operator
 import random
+import re
 
 import charactergen.characterclass as characterclass 
 from charactergen.mixins import BasicAttributesMixin, BasicAttribRaceMixin, AppearenceMixin, AscendingAcMixin, HitDiceMixin, PsionicWildTalentMixin
@@ -383,6 +384,86 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         return bonus
 
     @property
+    def spellcasting_bonus(self):
+        bonus = 0
+        if self.character_class == characterclass.CLERIC:
+            bonus = self.get_bonus(*self.attributes[characterclass.WIS])
+        else:
+            # magi and elves
+            bonus = self.get_bonus(*self.attributes[characterclass.INT])
+        bonus += int(self.level/2) 
+        if bonus > 0:
+            bonus = "+%d" % bonus
+        return bonus
+
+    def weapons_carried (self):
+        weapons = [ self.prime_hand ] 
+        if self.off_hand != self.prime_hand and "(1d" in self.off_hand:
+            weapons.append(self.off_hand)
+
+        for item in self.ready_equipment:
+            if "(1d" in item:
+                weapons.append(item)
+
+        for item in self.equipment:
+            if "(1d" in item:
+                weapons.append(item)
+
+        # finally, add in more items if we are less than 3.
+        items_to_add = 4 - len(weapons)
+        if (items_to_add > 0):
+            weapons.extend(random.sample(['Fist (1d2)', 'Grapple', 'Kick (1d4)'], items_to_add))
+
+        print (weapons)
+        return weapons 
+
+    @property
+    def prof_weapons(self):
+        # weapons we are proficient in using
+        weapons = self.weapons_carried() 
+        profs = [ weapons.pop(0) ] # we always are proficient in the weapon being held (e.g. first in list) 
+
+        allowed_weapon_profs = 0
+        if (self.character_class == characterclass.CLERIC):
+            allowed_weapon_profs = 1
+        elif (self.character_class == characterclass.THIEF):
+            allowed_weapon_profs = 2
+        elif (self.character_class == characterclass.FIGHTER):
+            allowed_weapon_profs = 3
+
+        # add in any additional proficiencies
+        if (allowed_weapon_profs > 0):
+            # trim the later entries which are the HTH ones (we should prioritize carried equipment)
+           weapons = weapons[0:allowed_weapon_profs]
+           # random sample of what is left
+           profs.extend(random.sample(weapons, allowed_weapon_profs))
+
+        val = ", ".join(profs)
+        # remove damages
+        new_val = re.sub(r" \(1d\d+\)", '', val)
+        return new_val
+
+
+
+
+    @property
+    def combat_options(self):
+        options = "Stnd (AB+0, AC+0), Parry (+2 AC)"
+        fighter_opts = ["Aim/Feint (AB+4, AC-4, Init-4)", "Berserk (AB+3, Dam+3, AC-4)", "Cleave (AB+1, AC-4)", 
+                            "Lightning (Init-4, AC-4)", "Rapid Shot (AC-4)", "Rapid Strike (AC-4)", "Shield Bash", "Strong (Dam x2, AC-4)",
+                            "Stun (AC-4)", "2 Weapons"]
+        if (self.character_class == characterclass.FIGHTER):
+            rand_opt  = random.choice(fighter_opts)
+            options = "Stnd (AB+0, AC+0), Parry (+4 AC), Press (AB+2, AC-2), Def. (AB-2, AC+2), Charge (AB+2, AC-4, Dam x2), " + rand_opt 
+        return options
+
+    @property
+    def spell_dc(self):
+        bonus = int(self.spellcasting_bonus) 
+        bonus += 8
+        return bonus
+
+    @property
     def ready_items_allowed(self):
         ready_items_by_dex = {'3': 1, '4': 2, '6': 5, '9': 10, '13': 15, '16': 20, '18': 25 } 
         dex = self.attributes[characterclass.DEX][1]
@@ -461,7 +542,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         return occupations[self.occupation]
 
     def is_two_handed_item(self, item):
-        two_handed_items = ["staff", "greatsword", "bow", "pole", "garotte"]
+        two_handed_items = ["staff", "greatsword", "greataxe", "bow", "pole", "garotte"]
         for check in two_handed_items:
             if check in item:
                 return True
@@ -504,7 +585,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
                 self.worn = item
             # figure out what to put in our hands
             elif "spear" in check or "bow" in check or "staff" in check or "pole" in check\
-                    or "sword" in check or "pistol" in check\
+                    or "sword" in check or "rapier" in check or "pistol" in check\
                     or "mace" in check or "club" in check or "hammer" in check\
                     or "axe" in check or "flail" in check\
                     or "dagger" in check or "athame" in check or "knife" in check\
@@ -515,10 +596,10 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
                     or "musical" in check:
                 if self.prime_hand == None:
                     self.prime_hand = item
-                    if self.is_two_handed_item(item):
+                    if self.is_two_handed_item(check):
                         self.off_hand = item
                 elif self.off_hand == None:
-                    if not self.is_two_handed_item(item):
+                    if not self.is_two_handed_item(check):
                         self.off_hand = item
                     else:
                         self.ready_equipment.append(item)
@@ -556,7 +637,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
         # calculate Encumbrance and move
         self.encumbrance = 0
-        self.move = "6m/round"
+        self.move = "8m/round"
         if "chain" in self.worn.lower():
             self.encumbrance += 1
         elif "plate" in self.worn.lower():
@@ -584,7 +665,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         if self.encumbrance < 0: self.encumbrance = 0
         if self.encumbrance > 5: self.encumbrance = 5
 
-        move_str = ["6m/round", "6m/round", "4m/round", "2m/round", "1m/round", "0m/round"]
+        move_str = ["8m/round", "8m/round", "6m/round", "4m/round", "2m/round", "0m/round"]
         enc_str = ["Unencumbered", "Unencumbered", "Lightly", "Heavily", "Severely", "Over"]
 
         self.move = move_str[self.encumbrance]

@@ -109,7 +109,7 @@ class AscendingAcMixin(object):
         """
         The default armour class of an unarmoured combatant is 10.
         """
-        return 12
+        return 10
 
     @property
     def attack_bonus(self):
@@ -136,13 +136,13 @@ class AscendingAcMixin(object):
         The character's armor class based on their starting equipment.
         """
         ac = self.base_armour_class
-        if "Leather Armor" in self.equipment:
+        if "Leather Armor" in self.equipment or "Leather Armor" in self.worn:
             ac += 2
-        elif "Chain Armor" in self.equipment:
+        elif "Chain Armor" in self.equipment or "Chain Armor" in self.worn:
             ac += 4
-        elif "Plate Armor" in self.equipment:
+        elif "Plate Armor" in self.equipment or "Plate Armor" in self.worn:
             ac += 6
-        if "Shield" in self.equipment:
+        if "Shield" in self.equipment or (self.off_hand != None and "Shield" in self.off_hand):
             ac += 1
         ac += self.get_bonus(*self.attributes[characterclass.DEX])
         return ac

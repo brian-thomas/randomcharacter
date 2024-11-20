@@ -23,24 +23,20 @@
   <tr><td>
   <table class='saves'>
     <tr>
-        <td class="save">{{ c.saves_with_names.poison.0}}</td>
-        <td>{{ c.saves_with_names.poison.1}}</td>
+        <td class="save">{{ c.saves_with_names.magic.0}}</td> <td>{{ c.saves_with_names.magic.1}}</td>
     </tr>
     <tr>
         <td class="save">{{ c.saves_with_names.wands.0}}</td>
         <td>{{ c.saves_with_names.wands.1}}</td>
     </tr>
     <tr>
-        <td class="save">{{ c.saves_with_names.stone.0}}</td>
-        <td>{{ c.saves_with_names.stone.1}}</td>
+        <td class="save">{{ c.saves_with_names.poison.0}}</td> <td>{{ c.saves_with_names.poison.1}}</td>
     </tr>
     <tr>
-        <td class="save">{{ c.saves_with_names.breath.0}}</td>
-        <td>{{ c.saves_with_names.breath.1}}</td>
+        <td class="save">{{ c.saves_with_names.stone.0}}</td> <td>{{ c.saves_with_names.stone.1}}</td>
     </tr>
     <tr>
-        <td class="save">{{ c.saves_with_names.magic.0}}</td>
-        <td>{{ c.saves_with_names.magic.1}}</td>
+        <td class="save">{{ c.saves_with_names.breath.0}}</td> <td>{{ c.saves_with_names.breath.1}}</td>
     </tr>
     <tr>
         <td class="save">{{ c.saves_with_names.ego.0}}</td>
@@ -70,32 +66,26 @@
 </table>
 
 <table class="weapon">
-{% if c.to_hit %}
-    <tr>
-        <td><strong>AC</strong></td>
-        {% for ac, roll in c.to_hit %}
-        <td>{{ ac }}</td>
-        {% endfor %}
-    </tr>
-    <tr>
-        <td><strong>Roll</strong></td>
-        {% for ac, roll in c.to_hit %}
-        <td>{{ roll }}</td>
-        {% endfor %}
-    </tr>
-{% else %}
     <tr>
         <td>Initiative Bonus: {{ c.initiative_bonus }}</td>
         <td>Melee Attack Bonus: {{ c.melee_attack_bonus }}</td>
         <td>Ranged Attack Bonus: {{ c.ranged_attack_bonus }}</td>
     </tr>
-{% endif %}
+</table>
+<table class="weapon">
+    <tr>
+	    <td>Combat Options:</td><td colspan="2">{{ c.combat_options }}</td>
+    </tr>
+    <tr>
+	    <td>Proficient Weapons:</td><td colspan="2">{{ c.prof_weapons }}</td>
+    </tr>
 </table>
 
 <div id="extras">
 
   {% if c.skills %}
   <div class="block">
+
       <h3>Skills</h3>
       <table class="thief skills">
           <tr>
@@ -107,20 +97,27 @@
           </tr>
           {% endfor %}
       </table>
+
       {% if c.sneak_attack %}
       <h3>Sneak Attack ({{c.sneak_attack}})</h3>
       <table class="thief skills">
-              <tr><td>On a Sneak Attack apply a +{{c.sneak_attack}} bonus to the attack roll and add {{ c.sneak_attack_dmg }}.</td></tr>
+          <tr><td>On a Sneak Attack apply a +{{c.sneak_attack}} bonus to the attack roll and add {{ c.sneak_attack_dmg }}.</td></tr>
       </table>
       {% endif %}
+
       {% if c.spell %}
       <h3>Spells</h3>
+      <table>
+      <tr><td>Spellcasting bonus: {{ c.spellcasting_bonus }}</td></tr> 
+      <tr><td>Spell DC: {{ c.spell_dc}}</td></tr> 
+      </table>
       <table class="thief skills">
 	<!--tr><td><strong>Level 1</strong></td><td></td></tr-->
-	<tr><th>Casting DC</th><th>Name</th></tr>
+	<tr><th>Spell</th><th>Casting DC</th></tr>
         {% for spell in c.spell %}
 	    <tr>
-		  <td style="width: 30%;">11</td><td style="text-align: left;">{{ spell }}</td>
+		  <td style="text-align: left;">{{ spell }}</td>
+		  <td style="width: 10%;">11</td>
 	    </tr>
         {% endfor %}
       </table>
@@ -212,25 +209,8 @@
   {% endif %}
 </div>
 
-<!--
-{% include "plaintext.txt" %}
--->
+<!-- {% include "plaintext.txt" %} -->
 
 <footer>
-	<!--
-    <p>
-    You can also generate <strong><a href="/lbb">1974 D&D characters</a></strong>, <strong><a href="/holmes">Holmes D&D characters</a></strong> and <strong><a href="/lotfp">Lamentations of the Flame Princess</a></strong>. Add "text" to the end of a URL to get a <a href="/text">plaintext character sheet</a>. If you are a programmer adding "json" to the end of the URL gives you a <a href="/basic/json">JSON dictionary<a>. You can also generate OD&D characters suitable for the campaign worlds of <strong><a href='/pahvelorn'>Pahvelorn</a></strong>, <strong><a href="/apolyon">Apolyon</a></strong>, and <strong><a href='/carcosa/'>Carcosa</a></strong>.
-    </p>
-    <p>
-        If you need a name, check out <a href="http://www.rinkworks.com/namegen/">The Fantasy Name Generator</a>.
-    </p>
-    <p>
-    Site designed and built by <a href="http://funkaoshi.com">Ramanan Sivaranjan</a>. Equipment lists generated using <a href="http://www.necropraxis.com/2012/07/20/odd-equipment/">random charts from Necropraxis.</a> Other random tables taken from <em>"Moldvay" Basic D&D</em>. Check out more D&D stuff at <a href="http://save.vs.totalpartykill.ca">Save vs. Total Party Kill</a>. Some armour and weapons for the <a href="/carcosa">Carcosa</a> character generator comes from <a href="http://dungeonofsigns.blogspot.ca/2013/02/strange-armor-alternatives.html">Strange Armour Alternatives from Dungeon of Signs</a> and <a href="http://carapaceking.blogspot.ca/2012/01/making-do-with-limited-resources.html">Making do with Limited Resources from Carapace King</a>. A huge thanks to <a href="https://plus.google.com/+EricBoyd/posts">Eric Boyd</a> for making the LotFP character sheets.
-    </p>
-
-    <p>
-        If this site looks ugly, please let me know&mdash;unless you're using Internet Explorer. <a href="https://github.com/funkaoshi/randomcharacter">This is an open source project.</a>
-    </p>
-	-->
 </footer>
 {% endblock %}
