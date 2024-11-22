@@ -23,20 +23,20 @@
   <tr><td>
   <table class='saves'>
     <tr>
-        <td class="save">{{ c.saves_with_names.magic.0}}</td> <td>{{ c.saves_with_names.magic.1}}</td>
+        <td class="save">{{ c.saves_with_names.fortitude.0}}</td> <td>{{ c.saves_with_names.fortitude.1}}</td>
     </tr>
     <tr>
-        <td class="save">{{ c.saves_with_names.wands.0}}</td>
-        <td>{{ c.saves_with_names.wands.1}}</td>
+        <td class="save">{{ c.saves_with_names.dodge.0}}</td>
+        <td>{{ c.saves_with_names.dodge.1}}</td>
     </tr>
     <tr>
-        <td class="save">{{ c.saves_with_names.poison.0}}</td> <td>{{ c.saves_with_names.poison.1}}</td>
+        <td class="save">{{ c.saves_with_names.health.0}}</td> <td>{{ c.saves_with_names.health.1}}</td>
     </tr>
     <tr>
-        <td class="save">{{ c.saves_with_names.stone.0}}</td> <td>{{ c.saves_with_names.stone.1}}</td>
+        <td class="save">{{ c.saves_with_names.perception.0}}</td> <td>{{ c.saves_with_names.perception.1}}</td>
     </tr>
     <tr>
-        <td class="save">{{ c.saves_with_names.breath.0}}</td> <td>{{ c.saves_with_names.breath.1}}</td>
+        <td class="save">{{ c.saves_with_names.willpower.0}}</td> <td>{{ c.saves_with_names.willpower.1}}</td>
     </tr>
     <tr>
         <td class="save">{{ c.saves_with_names.ego.0}}</td>
@@ -74,11 +74,13 @@
 </table>
 <table class="weapon">
     <tr>
-	    <td>Combat Options:</td><td colspan="2">{{ c.combat_options }}</td>
+	    <td>Combat Options:</td><td colspan="4"> {{ c.combat_options }}</td>
     </tr>
+    <!--
     <tr>
 	    <td>Proficient Weapons:</td><td colspan="2">{{ c.prof_weapons }}</td>
     </tr>
+    -->
 </table>
 
 <div id="extras">
@@ -133,6 +135,17 @@
               <td>{{ undead }}</td><td>{{ roll }}</td>
           </tr>
           {% endfor %}
+      </table>
+      {% endif %}
+
+      {% if c.class_name == 'Thief' %}
+      <h3>Perks</h3>
+      <table class="skills">
+        {% for perk, desc in c.perks %}
+          <tr>
+		  <td>{{ perk }} </td><td>{{ desc }}</td> 
+          </tr>
+        {% endfor %}
       </table>
       {% endif %}
 
@@ -208,8 +221,6 @@
   </div>
   {% endif %}
 </div>
-
-<!-- {% include "plaintext.txt" %} -->
 
 <footer>
 </footer>

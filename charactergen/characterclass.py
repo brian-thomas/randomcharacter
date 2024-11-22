@@ -329,7 +329,7 @@ HOMEBREW = {
 #        ('Theology', 0),
 #        ('Tinker', 0),
 
-    'spells': [
+    'wiz_spells': [
         'Bookspeak', 'Charm Person', 'Comprehend Languages',
         'Enlarge', 'Faerie Fire', 'Feather Fall', 'Floating Disc',
         'Hold Portal', 'Light', 'Magic Missile',
@@ -337,6 +337,34 @@ HOMEBREW = {
         'Protection from Evil',
         'Unseen Servant'
     ],
+
+    'cleric_spells': [
+        'Bless', 'Command', 'Create Water', 'Cure Light Wounds', 
+        'Detect Evil', 'Detect Poison & Disease', 'Invisibile to Undead', 
+        'Light', 'Prot. From Evil', 'Purify Food & Drink', 'Remove Fear', 
+        'Sanctuary'
+    ],
+
+    'perks' : {
+        'Alert' : { 'combat' : { 'initiative' : 3 }, 'desc' : 'Cannot be surpised, Init+3'},
+        'Acrobat' : { 'save' : { 'dodge' : 2 }, 'skills' : {'Athletics' : 1}, 'desc' : 'Dodge+2, Athletics+1'},
+        'Actor' : { 'save' : { 'ego' : 1 }, 'skills' : {'Deception' : 1}, 'desc' : 'Ego+1, Deception+1, may mimic others'},
+        'Bodybuilder' : { 'save' : { 'fortitude' : 2 }, 'skills' : {'Athletics' : 1}, 'desc' : 'Fort+1, Athletics+1'},
+        'Courtier' : { 'status' : 1,  'desc' : 'Status+1, Minor immunity to law'}, 
+        'Contacts' : { 'desc' : '3 contacts who render help/info 1/session.'}, 
+        'Eidetic' : { 'save' : { 'perception' : 1 }, 'desc' : 'Per+1, Always know time/direction. Recall events accurately.'},
+        'Higher Status' : { 'status' : 1,  'skills' : {'Social' : 1}, 'desc' : 'Status+1, Social+1'}, 
+        'Healer' : { 'skills' : {'Chirurgeon' : 2}, 'desc' : 'Chirurgeon+2, always crit med check to bind.'}, 
+        'Healthy' : { 'save' : { 'health' : 2 }, 'skills' : {'Athletics' : 1}, 'desc' : 'Health+2, Athletics+1'},
+        'Leader' : { 'save' : { 'ego' : 1 }, 'skills' : {'Leadership' : 1}, 'desc' : 'Ego+1, Lead+1, 2x number henchmen'},
+        'Lucky' : { 'desc' : 'Reroll 3/day 1d20 for best result'},
+        'Organized Packer' : { 'packer' : 1, 'desc' : 'Incr. ready items by 5.'},
+        'Perceptive' : { 'save' : { 'perception' : 1 }, 'skills' : {'Search' : 1}, 'desc' : 'Per+2, Search+1'},
+        'Scholar' : { 'skills' : {'Languages' : 1, 'History' : 1}, 'desc' : 'Lang+1, History+1, 2 extra languages'},
+        'Skilled' : { 'skills' : {'Social' : 1, 'Languages' : 1, 'History' : 1}, 'desc' : '+3 skill points'}, # fix! 
+        'Strong Will' : { 'save' : { 'willpower' : 2 }, 'skills' : {'Social' : 1}, 'desc' : 'Will+2, Social+1'},
+        'Tough' : { 'hp' : 2, 'desc' : 'Hp+2 per level'},
+     }, 
 
     'occupations' : { 
         'Acrobat' : { 'equip' : ["10' pole"], 'stats' : {'DEX' : 1,}, 'skills' : {}, 'MB' : 0, 'RB' : 0, }, 
@@ -413,11 +441,11 @@ HOMEBREW = {
     ],
 
     'saves': {
-        'poison': 'Health',
-        'wands': 'Dodge',
-        'stone': 'Perception',
-        'breath': 'Willpower',
-        'magic': 'Fortitude',
+        'health': 'Health',
+        'dodge': 'Dodge',
+        'perception': 'Perception',
+        'willpower': 'Willpower',
+        'fortitude': 'Fortitude',
         'ego': 'Ego'
     },
 }
@@ -527,7 +555,7 @@ LOTFP = {
             ["Shortbow (1d6)", "Quiver With 20 Arrows", "Dagger (1d4)", "Leather Armor", "Specialist Tools", "Waterskin", "Garrote (1d2)", "Lamp", "Waterskin", "Large Backpack", "Tinderbox", "50' Rope", "5x Rations", "Crowbar", "1 Cp"],
             ["Light Crossbow (1d6)", "Quiver With 12 Bolts", "Dagger (1d4)", "Leather Armor", "Lamp", "Specialist Tools", "Garrote (1d2)", "Waterskin", "Small Backpack", "Tinderbox", "Grappling Hook", "50' Rope", "3 Flasks of Oil", "Scroll Case", "2 day's Rations", "4 Cp"],
             ["Quarter Staff (1d6)", "Dagger (1d4)", "Leather Armor", "Specialist Tools", "Bullseye Lantern", "Crowbar", "Waterskin", "Small Backpack", "Tinderbox", "3 Flasks of Oil", "Crowbar", "Scroll Case", "2 day's Rations", "4 Cp"],
-            ["Shortbow (1d6)", "Quiver With 20 Arrows", "Club", "Leather Armor", "Specialist Tools", "Waterskin", "Large Backpack", "Tinderbox", "Grappling Hook", "50' Rope", "Bullseye Lantern", "3 Flasks of Oil", "Wood Drill", "Scroll Case", "Holy Water", "2 day's Rations", "4 Cp"],
+            ["Shortbow (1d6)", "Quiver With 20 Arrows", "Club (1d6)", "Leather Armor", "Specialist Tools", "Waterskin", "Large Backpack", "Tinderbox", "Grappling Hook", "50' Rope", "Bullseye Lantern", "3 Flasks of Oil", "Wood Drill", "Scroll Case", "Holy Water", "2 day's Rations", "4 Cp"],
             ["Spear (1d8)", "Leather Armor", "Specialist Tools", "Waterskin", "Hooded Lantern", "Waterskin", "Large Backpack", "Tinderbox", "50' Rope", "3 Flasks of Oil", "Pot of Lard", "Scroll Case", "Holy Water", "2 day's Rations", "4 Cp"],
             ["Whip (1d4)", "Dagger (1d4)", "Leather Armor", "Specialist Tools", "Garrote (1d2)", "3 Torches", "Scroll Case", "Waterskin", "Small Backpack", "Tinderbox", "Grappling Hook", "50' Rope", "Pot of Lard", "3x Holy Water", "2 day's Rations", "4 Cp"],
         ],
@@ -538,10 +566,10 @@ LOTFP = {
             ["Mace (1d6)", "Shield", "Leather Armor", "5x Rations", "3 Torches", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "6 Cp"],
             ["Mace (1d6)", "Shield", "Spear (1d8)", "Dagger (1d4)", "Leather Armor", "5x Rations", "3 Torches", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "3 Cp"],
             ["Light Crossbow (1d6)", "Quiver With 20 Bolts", "Leather Armor", "Mace (1d6)", "5x Rations", "Waterskin", "Small Backpack", "3 Torches", "Tinderbox", "50' Rope", "5x Iron Spike", "4 Cp"],
-            ["Spear (1d8)", "Dagger (1d4)", "Shield", "Leather Armor", "5x Rations", "Waterskin", "Small Backpack", "Lamp", "Tinderbox", "50' Rope", "5x Iron Spike", "Shortbow (1d6)", "Quiver With 20 Arrows", "6 Cp"],
-            ["Warhammer (1d8)", "Shield", "Dagger (1d4)", "Leather Armor", "5x Rations", "Lamp", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "Light Crossbow (1d6)", "Quiver With 10 Bolts", "5 Cp"],
-            ["Mace (1d6)", "Dagger (1d4)", "Shield", "Mace (1d6)", "Leather Armor", "5x Rations", "3 Torches", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "Shortbow (1d6)", "Quiver With 20 Arrows", "3 Cp"],
-            ["Club", "Shield", "Chain Armor", "5x Rations", "Lamp", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "2 Cp"],
+            ["Spear (1d8)", "Shield", "Leather Armor", "5x Rations", "Waterskin", "Small Backpack", "Lamp", "Tinderbox", "50' Rope", "5x Iron Spike", "Shortbow (1d6)", "Quiver With 20 Arrows", "6 Cp"],
+            ["Warhammer (1d8)", "Shield", "Leather Armor", "5x Rations", "Lamp", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "Light Crossbow (1d6)", "Quiver With 10 Bolts", "5 Cp"],
+            ["Mace (1d6)", "Shortbow (1d6)", "Shield", "Mace (1d6)", "Leather Armor", "5x Rations", "3 Torches", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "Quiver With 20 Arrows", "3 Cp"],
+            ["Club (1d6)", "Shield", "Chain Armor", "5x Rations", "Lamp", "Tinderbox", "50' Rope", "Waterskin", "Small Backpack", "5x Iron Spike", "2 Cp"],
             ["Mace (1d6)", "Shield", "Dagger (1d4)", "Chain Armor", "5x Rations", "3 Torches", "Tinderbox", "50' Rope", "Waterskin", "Large Backpack", "5x Iron Spike", "8 Cp"],
             ["Warhammer (1d8)", "Shield", "Chain Armor", "Mace (1d6)", "5x Rations", "Hooded Lantern", "Tinderbox", "50' Rope", "Waterskin", "Large Backpack", "5x Iron Spike", "4 Cp"],
             ["Spear (1d8)", "Shield", "Chain Armor", "Mace (1d6)", "Shortsword (1d6)", "5x Rations", "Bullseye Lantern", "Tinderbox", "50' Rope", "Waterskin", "Large Backpack", "5x Iron Spike", "3 Cp"],
@@ -550,7 +578,7 @@ LOTFP = {
             ["Spear (1d8)", "Mace (1d6)", "Shield", "Chain Armor", "5x Rations", "Waterskin", "3 Torches", "Tinderbox", "Large Backpack", "5x Iron Spike", "Shortbow (1d6)", "Crowbar", "9 Cp"],
         ],
         'Fighter': [
-            ["Rapier (1d8)", "Dagger (1d4)", "5x Rations", "Waterskin", "Sack", "4 Cp"],
+            ["Rapier (1d8)", "Dagger (1d4)", "5x Rations", "Waterskin", "Sack", "Vial of Poison", "4 Cp"],
             ["Sword (1d8)", "Shield", "5x Rations", "Waterskin", "Rucksack", "Crowbar", "1 Cp"],
             ["Spear (1d8)", "Shield", "Dagger (1d4)", "Leather Armor", "5x Rations", "Waterskin", "Small Backpack", "3 Torches", "Tinderbox", "50' Rope", "5x Iron Spike", "1 Cp"],
             ["Sword (1d8)", "Shield", "Leather Armor", "5x Rations", "Waterskin", "3 Torches", "Tinderbox", "50' Rope", "Small Backpack", "5x Iron Spike", "1 Cp"],

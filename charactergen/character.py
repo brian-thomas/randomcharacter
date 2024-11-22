@@ -37,7 +37,13 @@ class Character(BasicAttributesMixin, AppearenceMixin):
 
         self.character_class = self.get_character_class(classname)
         self.level = 1
+
+        self.status = 0
+        self.org_packer = None
+        self.hp_bonus = None
+
         self.class_name = self.character_class['name']
+        print ("class: %s" % self.class_name)
         self.personality = self.get_personality()
         if testing:
             return
@@ -52,7 +58,11 @@ class Character(BasicAttributesMixin, AppearenceMixin):
         self.languages = self.get_languages()
         self.spell = self.get_spell()
         self.notes = self.get_notes()
+        print ("skills")
         self.skills = self.get_skills()
+        print ("perks")
+        self.perks = self.get_perks()
+
 
     def to_dict(self):
         """
@@ -212,6 +222,12 @@ class Character(BasicAttributesMixin, AppearenceMixin):
         """
         return []
 
+    def get_perks(self):
+        """
+        Return any character perks (feats) 
+        """
+        return None
+
     def get_skills(self):
         """
         Return any character skills, like thief abilities.
@@ -354,9 +370,23 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
     @property
     def initiative_bonus(self):
         bonus = self.get_bonus(*self.attributes[characterclass.DEX])
+
+        if self.init_bonus != None:
+            bonus += self.init_bonus
+
         if bonus > 0:
-            bonus = "+%d" % bonus
+            bonus = _num_to_str(bonus)
+
         return bonus
+
+    def get_hp(self):
+        hp = super().get_hp()  
+        hp = super(LotFPCharacter, self).get_hp()
+
+        if self.hp_bonus != None: 
+            hp += self.hp_bonus * self.level
+
+        return hp
 
     @property
     def melee_attack_bonus(self):
@@ -368,7 +398,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         bonus += occupation['MB']
 
         if bonus > 0:
-            bonus = "+%d" % bonus
+            bonus = _num_to_str(bonus)
         return bonus
 
     @property
@@ -398,7 +428,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
     def weapons_carried (self):
         weapons = [ self.prime_hand ] 
-        if self.off_hand != self.prime_hand and "(1d" in self.off_hand:
+        if self.off_hand != None and self.off_hand != self.prime_hand and "(1d" in self.off_hand:
             weapons.append(self.off_hand)
 
         for item in self.ready_equipment:
@@ -414,7 +444,6 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         if (items_to_add > 0):
             weapons.extend(random.sample(['Fist (1d2)', 'Grapple', 'Kick (1d4)'], items_to_add))
 
-        print (weapons)
         return weapons 
 
     @property
@@ -448,13 +477,13 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
     @property
     def combat_options(self):
-        options = "Stnd (AB+0, AC+0), Parry (+2 AC)"
+        options = "Stnd (AB+0, AC+0), Parry (AC+2)"
         fighter_opts = ["Aim/Feint (AB+4, AC-4, Init-4)", "Berserk (AB+3, Dam+3, AC-4)", "Cleave (AB+1, AC-4)", 
-                            "Lightning (Init-4, AC-4)", "Rapid Shot (AC-4)", "Rapid Strike (AC-4)", "Shield Bash", "Strong (Dam x2, AC-4)",
+                            "Lightning (Init-4, AC-4)", "Rapid Shot (AC-4)", "Rapid Strike (AC-4)", "Shield Bash", "Strong (Damx2, AC-4)",
                             "Stun (AC-4)", "2 Weapons"]
         if (self.character_class == characterclass.FIGHTER):
             rand_opt  = random.choice(fighter_opts)
-            options = "Stnd (AB+0, AC+0), Parry (+4 AC), Press (AB+2, AC-2), Def. (AB-2, AC+2), Charge (AB+2, AC-4, Dam x2), " + rand_opt 
+            options = "Stnd (AB+0, AC+0), Parry (AC+4), Press (AB+2, AC-2), Def. (AB-2, AC+2), Charge (AB+2, AC-4, Damx2), " + rand_opt 
         return options
 
     @property
@@ -473,6 +502,9 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             v = int(ri_dex)
             if dex >= v:
                 ready_items_allowed = ri_allowed
+
+        if self.org_packer != None:
+            ready_items_allowed += 5 
 
         # subtract for the equipment in hand
         if self.prime_hand != None:
@@ -542,7 +574,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         return occupations[self.occupation]
 
     def is_two_handed_item(self, item):
-        two_handed_items = ["staff", "greatsword", "greataxe", "bow", "pole", "garotte"]
+        two_handed_items = ["staff", "great spear", "greatsword", "greataxe", "bow", "pole", "garotte"]
         for check in two_handed_items:
             if check in item:
                 return True
@@ -590,6 +622,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
                     or "axe" in check or "flail" in check\
                     or "dagger" in check or "athame" in check or "knife" in check\
                     or "buckler" in check or "shield" in check\
+                    or "knives" in check\
                     or "holy" in check or "symbol" in check\
                     or "garotte" in check or "pick" in check\
                     or "lamp" in check or "lantern" in check or "torch" in check\
@@ -728,9 +761,9 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
                 number = 2
             if self.race == 'Elf':
                 number += 1
-            return random.sample(characterclass.HOMEBREW['spells'], number)
+            return random.sample(characterclass.HOMEBREW['wiz_spells'], number)
         elif self.character_class == characterclass.CLERIC:
-            return ['One clerical spell a day']
+            return random.sample(characterclass.HOMEBREW['cleric_spells'], 1)
         return None
 
 
@@ -761,6 +794,77 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         bonus = self.get_bonus(attr, val)
         return _num_to_str(bonus) 
 
+    def get_skill(self, name):
+        for skill in self.skills:
+            if name in skill[0]:
+                return skill
+        return None
+
+    def get_perks(self): 
+        if self.character_class == characterclass.THIEF:
+
+            # check if we have sneak attack already
+            sa_skill = self.get_skill('Sneak Attack')
+            if sa_skill != None and int(sa_skill[1]) > 0:
+                return [ ('Assassin', 'Can sneak attack'), ]
+            else:
+
+                # add some perks 
+                perks = characterclass.HOMEBREW['perks']
+                perkname = random.choice(list(perks.keys()))
+
+                print (perks[perkname])
+                # add bonus from perk to character
+                for item, val in perks[perkname].items():
+                    if 'desc' in item:
+                        pass
+
+                    print (f"%s -> %s " % (item, val))
+
+                    if 'languages' in item:
+                        self.extra_lang = val
+
+                    if 'hp' in item:
+                        self.hp_bonus = val
+
+                    if 'packer' in item:
+                        self.org_packer = 1
+
+                    if 'status' in item:
+                        self.status += val
+
+                    if 'combat' in item:
+                        for s,v in val.items():
+                            if "initiative" in s:
+                                self.init_bonus = v
+
+                    if 'save' in item:
+                        for s,v in val.items():
+                            new_val = int(self.saves[s]) + v
+                            self.saves[s] = _num_to_str(new_val) 
+
+                    if 'skills' in item:
+                        # do this, more convenient for changing
+                        skills = { i[0]:int(i[1]) for i in self.skills } 
+
+                        print (f"Old SKILLS: %s" % skills)
+                        for s,v in val.items():
+                            print (f" update perk skill: {s} : {v}")
+                            if s in skills:
+                                new_val = skills[s] + v
+                                skills[s] = new_val
+                            else:
+                                skills[s] = v
+
+                        print (f"New SKILLS: %s" % skills)
+                        # reinit changed values 
+                        self.skills = [(s, _num_to_str(v)) for s, v in skills.items()]
+
+                # return the perk in array
+                return [ (perkname, perks[perkname]['desc']), ]
+
+        return None
+
     def get_skills(self):
         
         skills = dict((s, x) for s, x in characterclass.HOMEBREW['skills'])
@@ -781,7 +885,6 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         if self.character_class == characterclass.THIEF:
             skills['Sneak Attack'] = 0
 
-
             # add some thief skills
             thief_skills = random.choice(characterclass.HOMEBREW['specialist_builds'])
             skills = LotFP_Homebrew_Character._randomize_skills(skills, thief_skills, 8, max_skill_value)
@@ -791,7 +894,8 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             skills['Theology'] = theology_skill
 
             remain_cleric_skills = 4 - theology_skill
-            cleric_skills = ['Languages', 'Chirurgeon', 'Preaching', 'Oratory', 'History', 'Merchant', 'Naturalist', 'Arcana']
+            cleric_skills = ['Languages', 'Chirurgeon', 'Preaching', 'Oratory', 'History', 'Diplomacy',
+                             'Merchant', 'Naturalist', 'Arcana', 'Acting']
             skills = LotFP_Homebrew_Character._randomize_skills(skills, cleric_skills, remain_cleric_skills, max_skill_value)
 
         if self.character_class == characterclass.MAGICUSER:
@@ -799,7 +903,8 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             skills['Arcana'] = arcana_skill
 
             remain_wiz_skills = 4 - arcana_skill
-            wiz_skills = ['Languages', 'Alchemy', 'Chirurgeon', 'Cartography', 'History', 'Merchant', 'Naturalist', 'Theology']
+            wiz_skills = ['Astrology', 'Alchemy', 'Architecture', 'Chirurgeon', 'Cartography', 'History', 
+                          'Languages', 'Merchant', 'Naturalist', 'Jeweler', 'Theology']
             skills = LotFP_Homebrew_Character._randomize_skills(skills, wiz_skills, remain_wiz_skills, max_skill_value)
 
         if self.character_class == characterclass.FIGHTER:
@@ -852,7 +957,8 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
         # for special formatting which we aren't using
         if self.character_class == characterclass.THIEF:
-            self.sneak_attack = skills.pop('Sneak Attack')
+            #self.sneak_attack = skills.pop('Sneak Attack')
+            self.sneak_attack = skills['Sneak Attack']
             self.sneak_attack_dmg = '+1d6'
 
         # pass thru and make an array
@@ -861,27 +967,26 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         return skills
 
 
-
     def get_saves(self):
         """
         We use ability checks.
         """
-        saves = {'poison': 0, 'wands': 0, 'stone': 0, 'breath': 0, 'magic': 0, 'ego': 0} 
+        saves = {'health': 0, 'dodge': 0, 'perception': 0, 'willpower': 0, 'fortitude': 0, 'ego': 0} 
 
         # Health
-        saves['poison'] = self.get_sbonus(*self.attributes[characterclass.CON])
+        saves['health'] = self.get_sbonus(*self.attributes[characterclass.CON])
 
         # Dodge
-        saves['wands'] = self.get_sbonus(*self.attributes[characterclass.DEX])
+        saves['dodge'] = self.get_sbonus(*self.attributes[characterclass.DEX])
 
         # Perception
-        saves['stone'] = self.get_sbonus(*self.attributes[characterclass.INT])
+        saves['perception'] = self.get_sbonus(*self.attributes[characterclass.INT])
 
         # Willpower
-        saves['breath'] = self.get_sbonus(*self.attributes[characterclass.WIS])
+        saves['willpower'] = self.get_sbonus(*self.attributes[characterclass.WIS])
 
         # Fortitude
-        saves['magic'] = self.get_sbonus(*self.attributes[characterclass.STR])
+        saves['fortitude'] = self.get_sbonus(*self.attributes[characterclass.STR])
 
         # Ego 
         saves['ego'] = self.get_sbonus(*self.attributes[characterclass.CHA])
@@ -971,6 +1076,7 @@ class LBBCharacter(Character):
         hp = super(LBBCharacter, self).get_hp()
         if self.character_class == characterclass.FIGHTER:
             hp = hp + 1
+
         return hp
 
     def get_bonus(self, attr, val):
