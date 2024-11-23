@@ -67,14 +67,16 @@
 
 <table class="weapon">
     <tr>
-        <td>Initiative Bonus: {{ c.initiative_bonus }}</td>
-        <td>Melee Attack Bonus: {{ c.melee_attack_bonus }}</td>
-        <td>Ranged Attack Bonus: {{ c.ranged_attack_bonus }}</td>
+        <td style="text-align: left;">Initiative Bonus: {{ c.initiative_bonus }}</td>
+	<td colspan="2">Combat Options</td>
     </tr>
-</table>
-<table class="weapon">
     <tr>
-	    <td>Combat Options:</td><td colspan="4"> {{ c.combat_options }}</td>
+        <td style="text-align: left;">Melee Attack Bonus: {{ c.melee_attack_bonus }}</td>
+	<td colspan="2">{{ c.cmbt_options_basic }}</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Ranged Attack Bonus: {{ c.ranged_attack_bonus }}</td>
+	<td colspan="2"> {{ c.cmbt_options_adv }}</td>
     </tr>
     <!--
     <tr>

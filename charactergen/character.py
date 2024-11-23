@@ -41,6 +41,7 @@ class Character(BasicAttributesMixin, AppearenceMixin):
         self.status = 0
         self.org_packer = None
         self.hp_bonus = None
+        self.init_bonus = None
 
         self.class_name = self.character_class['name']
         print ("class: %s" % self.class_name)
@@ -370,12 +371,15 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
     @property
     def initiative_bonus(self):
         bonus = self.get_bonus(*self.attributes[characterclass.DEX])
+        print (f"call init bonus:{bonus}")
 
         if self.init_bonus != None:
             bonus += self.init_bonus
 
         if bonus > 0:
             bonus = _num_to_str(bonus)
+
+        print (f"  new init bonus: {bonus}")
 
         return bonus
 
@@ -473,17 +477,23 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         return new_val
 
 
-
+    @property
+    def cmbt_options_basic(self):
+        options = "Stnd (AB+0, AC+0), Parry (AC+2)"
+        if (self.character_class == characterclass.FIGHTER):
+            options = "Stnd (AB+0, AC+0), Parry (AC+4), Press (AB+2, AC-2),"
+        return options
 
     @property
-    def combat_options(self):
-        options = "Stnd (AB+0, AC+0), Parry (AC+2)"
+    def cmbt_options_adv(self):
+        options = ""
         fighter_opts = ["Aim/Feint (AB+4, AC-4, Init-4)", "Berserk (AB+3, Dam+3, AC-4)", "Cleave (AB+1, AC-4)", 
                             "Lightning (Init-4, AC-4)", "Rapid Shot (AC-4)", "Rapid Strike (AC-4)", "Shield Bash", "Strong (Damx2, AC-4)",
                             "Stun (AC-4)", "2 Weapons"]
         if (self.character_class == characterclass.FIGHTER):
             rand_opt  = random.choice(fighter_opts)
-            options = "Stnd (AB+0, AC+0), Parry (AC+4), Press (AB+2, AC-2), Def. (AB-2, AC+2), Charge (AB+2, AC-4, Damx2), " + rand_opt 
+            options = "Defs. (AB-2, AC+2), Charge (AB+2, AC-4, Damx2), " + rand_opt 
+
         return options
 
     @property
@@ -881,6 +891,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         # everyone gets 1 + Int Bonus to spend on any skill. 
         add_skill_points = max(int_bonus, 0)
 
+        print ("  skill cls specific")
         # deal with class-based skill tailoring 
         if self.character_class == characterclass.THIEF:
             skills['Sneak Attack'] = 0
@@ -899,12 +910,14 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             skills = LotFP_Homebrew_Character._randomize_skills(skills, cleric_skills, remain_cleric_skills, max_skill_value)
 
         if self.character_class == characterclass.MAGICUSER:
+            print ("  skill cls wiz")
             arcana_skill = xdy(1,3) # 1d3 points on arcana 
             skills['Arcana'] = arcana_skill
 
             remain_wiz_skills = 4 - arcana_skill
             wiz_skills = ['Astrology', 'Alchemy', 'Architecture', 'Chirurgeon', 'Cartography', 'History', 
                           'Languages', 'Merchant', 'Naturalist', 'Jeweler', 'Theology']
+            print ("  skill cls wiz - rnd skills")
             skills = LotFP_Homebrew_Character._randomize_skills(skills, wiz_skills, remain_wiz_skills, max_skill_value)
 
         if self.character_class == characterclass.FIGHTER:
@@ -930,6 +943,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             # get 1 rando points in skills
             add_skill_points += 1
 
+        print ("  skill set defs ")
         # set some defaults on core skills
         # We dont adopt a setting a minimum of '0' except for social skill
         skills['Athletics'] = skills['Athletics'] + max(str_bonus, dex_bonus)
@@ -939,6 +953,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         skills['Stealth'] = skills['Stealth'] + dex_bonus
         skills['Social'] = max(skills['Social'] + cha_bonus, 0)
 
+        print ("  skill apportion remaining randomly")
         # apportion all remaining skill points randomly
         skill_names = list(skills.keys()) 
         while (add_skill_points > 0):
@@ -948,6 +963,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
                 skills[s] = skills[s] + 1
                 add_skill_points -= 1
 
+        print ("  skill add occupation skills")
         # add in any occupational skills
         occupation = self.get_occupation()
         for s in occupation['skills']:
@@ -964,6 +980,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         # pass thru and make an array
         skills = [(s, _num_to_str(v)) for s, v in skills.items()]
 
+        print ("  return skills")
         return skills
 
 
