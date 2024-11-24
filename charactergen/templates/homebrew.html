@@ -119,15 +119,15 @@
       <h3>Spells</h3>
       <table>
       <tr><td>Spellcasting bonus: {{ c.spellcasting_bonus }}</td></tr> 
-      <tr><td>Spell DC: {{ c.spell_dc}}</td></tr> 
+      <tr><td>Spell DC: {{ c.spell_dc }}</td></tr> 
       </table>
       <table class="thief skills">
 	<!--tr><td><strong>Level 1</strong></td><td></td></tr-->
 	<tr><th>Spell</th><th>Casting DC</th></tr>
-        {% for spell in c.spell %}
+        {% for spell, dc in c.spell %}
 	    <tr>
 		  <td style="text-align: left;">{{ spell }}</td>
-		  <td style="width: 10%;">11</td>
+		  <td style="width: 10%;">{{ dc }}</td>
 	    </tr>
         {% endfor %}
       </table>

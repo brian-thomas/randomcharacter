@@ -307,7 +307,7 @@ class LotFPCharacter(AscendingAcMixin, Character):
     def hit_die(self):
         return characterclass.LOTFP['hitdice'][self.character_class['name']]
 
-    def roll_attribute_scores(self):
+    def roll_attribute_scores(self, min_sum:int=0):
         """
         In LotFP you re-roll your characters scores if they don't produce a
         positive value for your total bonuses.
@@ -316,7 +316,7 @@ class LotFPCharacter(AscendingAcMixin, Character):
             attributes = super(LotFPCharacter, self).roll_attribute_scores()
             bonuses = [self.get_bonus(attr, val) for attr, val in attributes]
             total_bonuses = sum(bonuses)
-            if total_bonuses >= 0:
+            if total_bonuses >= min_sum:
                 break
         return attributes
 
@@ -777,9 +777,9 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         self.encumbrance = f"%d (%s)" % (self.encumbrance, enc_str[self.encumbrance])
 
 
-    def roll_attribute_scores(self):
+    def roll_attribute_scores(self, min_sum:int=1):
 
-        attributes = super(LotFP_Homebrew_Character, self).roll_attribute_scores()
+        attributes = super(LotFP_Homebrew_Character, self).roll_attribute_scores(1)
 
         # randomize (former) occupation
         occupations = characterclass.HOMEBREW['occupations']
@@ -822,22 +822,74 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
         return bonus
 
+    allowed_spells_per_level = [
+            [0,0,0,0,0,0], # 0th
+            [0,2,0,0,0,0], # 1st lvl caster
+            [0,4,0,0,0,0], # 2
+            [0,4,2,0,0,0], # 3
+            [0,4,4,0,0,0], # 4
+            [0,4,4,2,0,0], # 5
+            [0,4,4,4,0,0], # 6
+            [0,4,4,4,2,0], # 7
+            [0,4,4,4,4,0], # 8
+            [0,4,4,4,4,2], # 9
+            [0,4,4,4,4,4], # 10
+    ]
+
+    allowed_elf_spells_per_level = [
+            [0,1,0,0,0,0], # 0th
+            [0,1,0,0,0,0], # 1st lvl 
+            [0,1,0,0,0,0], # 2
+            [0,1,0,0,0,0], # 3
+            [0,1,0,0,0,0], # 4
+            [0,2,0,0,0,0], # 5
+            [0,2,0,0,0,0], # 6
+            [0,2,0,0,0,0], # 7
+            [0,2,0,0,0,0], # 8
+            [0,3,0,0,0,0], # 9
+            [0,3,0,0,0,0], # 10
+            [0,3,0,0,0,0], # 11
+            [0,3,0,0,0,0], # 12
+            [0,4,0,0,0,0], # 13
+            [0,4,0,0,0,0], # 14
+            [0,4,0,0,0,0], # 15
+            [0,4,0,0,0,0], # 16
+            [0,5,0,0,0,0], # 17
+            [0,5,0,0,0,0], # 18
+            [0,5,0,0,0,0], # 19
+            [0,5,0,0,0,0], # 20
+    ]
+
     def get_spell(self):
         """
-        Magic-Users begin with 2 random spells.
+        Spells for all classes
         """
-        # TODO: lvl-adjusted spells
-        if 'spells' in self.character_class.keys():
-            number = 0
-            if self.character_class == characterclass.MAGICUSER:
-                number = 2
-            if self.race == 'Elf':
-                number += 1
-            return random.sample(characterclass.HOMEBREW['wiz_spells'], number)
-        elif self.character_class == characterclass.CLERIC:
-            return random.sample(characterclass.HOMEBREW['cleric_spells'], 1)
+        
+        number_known = [0,0,0,0,0,0] 
 
-        return None
+        if self.character_class == characterclass.MAGICUSER or self.character_class == characterclass.CLERIC:
+            number_known = LotFP_Homebrew_Character.allowed_spells_per_level[self.level]
+
+        # merge in elf spells
+        if self.race == 'Elf':
+            sp_lvl = 0
+            for num_spl in LotFP_Homebrew_Character.allowed_elf_spells_per_level[self.level]:
+                number_known[sp_lvl] = num_spl
+                sp_lvl += 1
+
+        spell_listname = 'wiz_spells'
+        if self.character_class == characterclass.CLERIC:
+            spell_listname = 'cleric_spells'
+
+        # do the add
+        spells = []
+        sp_lvl = 0
+        for num_spl in number_known:
+            for sp_name in random.sample(characterclass.HOMEBREW[spell_listname][sp_lvl], num_spl):
+                spells.append((sp_name, sp_lvl+10))
+            sp_lvl += 1
+
+        return spells if len(spells) > 0 else None
 
 
     def get_character_class(self, classname=None):

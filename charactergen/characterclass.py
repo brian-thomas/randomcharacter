@@ -330,19 +330,67 @@ HOMEBREW = {
 #        ('Tinker', 0),
 
     'wiz_spells': [
-        'Bookspeak', 'Charm Person', 'Comprehend Languages',
-        'Enlarge', 'Faerie Fire', 'Feather Fall', 'Floating Disc',
-        'Hold Portal', 'Light', 'Magic Missile',
-        'Mending', 'Message', 'Shield', 'Sleep', 'Spider Climb',
-        'Protection from Evil',
-        'Unseen Servant'
+        # cantrips
+        [],
+        # 1st lvl
+        [
+            'Bookspeak', 'Charm Person', 'Comprehend Languages', 'Detect Magic', 'Enlarge', 
+            'Faerie Fire', 'Feather Fall', 'Floating Disc', 'Hold Portal', 'Light', 
+            'Magic Aura', 'Magic Missile', 'Mending', 'Message', 'Shield', 'Sleep', 
+            'Spider Climb', 'Summon', 'Protection from Evil', 'Unseen Servant', 
+        ],
+        # 2nd lvl
+        [
+            'Audiable Glamour', 'Change Self', 'Detect Invisible', 'ESP', 'Force of Forbidment', 
+            'Forget', 'Invisibility', 'Knock', 'Levitate', 'Continual Light', 'Locate Object',
+            'Magic Mouth', 'Mirror Image', 'Phantasmal Force',
+            'Ray of Enfeeblement', 'Speak with Animals', 'Stinking Cloud', 'Suggestion', 'Wall of Fog',
+            'Web', 'Wizard Lock',
+        ],
+        # 3rd lvl
+        [
+            'Army of One', 'Clairvoyance', 'Detect Illusion', 'Dispel Magic', 'Explosive Runes',
+            'False Alignment',
+            'Fly', 'Gaseous Form', 'Gust of Wind', 'Haste', 'Hold Person', 'Howl of the Moon',
+            "Invisibility 10' radius", 
+            'Phantasmal Psychedelia', 'Prot from Missiles', 'Secret Page', 'Speak with Dead',
+            'Strange Waters II', 'Water Breathing', 'Wall of Sand' 
+        ],
+        # 4th lvl
+        [
+            'Charm Monster', 'Confusion', 'Creation, minor', 'Dig', 'Dimension Door', 'Extension',
+            'Globe of Invuln., minor', 'Hallucinatory Terrain', 'Improved Invis.', 'Plant Growth',
+            'Polymorph', 'Prot. from Weapons', 'Seven Gates', 'Shadow Monsters', 'Speak with Plants',
+            'Wall of Fire', 'Wall of Ice', 'Wizard Eye'
+        ],
+        # 5th lvl
+        [
+            'Airy Water', 'Animate Dead', 'Chaos', 'Cloudkill', 'Contact Outer Sphere', 'Creation, major',
+            'Faithful Hound' 'Feeblemind', 'Hold Monster', 'Interposing Hand', 'Magic Jar', 'Passwall',
+            'Secret Chest', 'Stone Shape', 'Telekinesis', 'Teleport Circle', 'Transmute Rock to Mud', 
+            'Wall of Force', 'Wall of Iron', 'Wall of Stone'
+        ],
     ],
 
     'cleric_spells': [
-        'Bless', 'Command', 'Create Water', 'Cure Light Wounds', 
-        'Detect Evil', 'Detect Poison & Disease', 'Invisibile to Undead', 
-        'Light', 'Prot. From Evil', 'Purify Food & Drink', 'Remove Fear', 
-        'Sanctuary'
+        # cantrips
+        [],
+        # 1st
+        [ 
+               'Bless', 'Command', 'Create Water', 'Cure Light Wounds', 'Detect Evil', 
+               'Detect Poison & Disease', 'Invisibile to Undead', 'Light', 'Prot. From Evil', 
+               'Purify Food & Drink', 'Remove Fear', 'Sanctuary'
+        ],
+        # 2nd
+        ['Augury', 'Delay Poison', 'Enthrall', 'Find Traps & Danger', 'Heat Metal','Heroism', 'Hold Person', 'Lessor Restoration', 
+         'Resist Cold', 'Resist Fire', 'Silence', 'Spirt Weapon'],
+        # 3rd
+        ['Animate Dead','Create Food & Water','Cure Disease','Dispel Magic','Glyph of Warding', 'Magic Vestment', 'Revivify', 
+         'Remove Curse', 'Sacrifice', 'Speak with Dead', 'Tongues', 'Water Walk'],
+        # 4th
+        ['Cure Serious Wounds', 'Detect Lie', 'Divination', 'Neutralize Poison', "Prot. from Evil 10'", 'Spell Immunity'],
+        # 5th
+        ['Commune', 'Cure Crit. Wounds', 'Dispel Evil', 'Insect Plague', 'Quest', 'True Seeing', ],
     ],
 
     'perks' : {
