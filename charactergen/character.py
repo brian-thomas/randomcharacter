@@ -68,6 +68,10 @@ class Character(BasicAttributesMixin, AppearenceMixin):
 
         print ("perks")
         self.perks = self.get_perks()
+
+        print ("enc & move calc")
+        self.get_encumbrance_and_move()
+
         print ("skills")
         self.skills = self.get_skills()
 
@@ -115,6 +119,9 @@ class Character(BasicAttributesMixin, AppearenceMixin):
         The max AC to display in to-hit table.
         """
         return 0
+
+    def get_encumbrance_and_move(self):
+        pass
 
     @property
     def max_to_hit(self):
@@ -709,6 +716,10 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             pack_equipment = pack_equipment[0:max_pack-1]
             self.ready_equipment.extend(excess_pack_items)
 
+        return pack_equipment
+
+    def get_encumbrance_and_move(self):
+
         # now check that the ready equipment list isn't too big (because of Char Dex):w
         # drop/remove all equipment at end of list if it is
         max_ready = self.ready_items_allowed
@@ -720,6 +731,7 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         self.move = "8m/round"
         if "chain" in self.worn.lower():
             self.encumbrance += 1
+
         elif "plate" in self.worn.lower():
             self.encumbrance += 2
 
@@ -738,6 +750,9 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
         if len(self.ready_equipment) + 2 >= 20:
             self.encumbrance += 1
+
+        if self.org_packer:
+            self.encumbrance -= 1
 
         if self.race == "Dwarf":
             self.encumbrance -= 1
@@ -761,7 +776,6 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         self.move = move_str[move_rate]
         self.encumbrance = f"%d (%s)" % (self.encumbrance, enc_str[self.encumbrance])
 
-        return pack_equipment
 
     def roll_attribute_scores(self):
 

@@ -359,7 +359,7 @@ HOMEBREW = {
         'Healthy' : { 'save' : { 'health' : 2 }, 'skills' : {'Athletics' : 1}, 'desc' : 'Health+2, Athletics+1'},
         'Leader' : { 'save' : { 'ego' : 1 }, 'skills' : {'Leadership' : 1}, 'desc' : 'Ego+1, Lead+1, 2x number henchmen'},
         'Lucky' : { 'desc' : 'Reroll d20 rolls 3/day for best result'},
-        'Organized Packer' : { 'packer' : 1, 'desc' : '+5 ready items.'},
+        'Organized Packer' : { 'packer' : 1, 'desc' : '+5 ready items. Enc-1.'},
         'Perceptive' : { 'save' : { 'perception' : 1 }, 'skills' : {'Search' : 1}, 'desc' : 'Per+2, Search+1'},
         'Scholar' : { 'skills' : {'Languages' : 1, 'History' : 1}, 'desc' : 'Lang+1, History+1, 2 extra languages'},
         'Skilled' : { 'skill_pts' : 3, 'desc' : '+3 skill points'}, # fix! 
