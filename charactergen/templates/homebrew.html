@@ -93,8 +93,8 @@
   {% if c.skills %}
   <div class="block">
 
-      <h3>Skills</h3 
-      <i>max value: {{c.max_skill_value}}</i>
+      <h3>Skills</h3>
+      <!-- <i>max value: {{c.max_skill_value}}</i> --> 
       <table class="thief skills">
           <tr>
               <th>Skill</th><th>Bonus</th>
@@ -164,28 +164,25 @@
       <table class="equipment">
 	<tr>
 		<td><i>Prime Hand: </i></td><td>
-	        {% if c.allowed_weapon_profs > 4 %}
+	        {% if "(1d" in c.prime_hand%}
 		        <b>
                 {% endif %}
-	        {% if c.allowed_weapon_profs > 6 %}
-			<i>
-                {% endif %}
-	        {% if c.allowed_weapon_profs > 8 %}
-		        <u>
-                {% endif %}
-				{{c.prime_hand}}
-	        {% if c.allowed_weapon_profs > 8 %}
-		        </u>
-                {% endif %}
-	        {% if c.allowed_weapon_profs > 6 %}
-			</i>
-                {% endif %}
-	        {% if c.allowed_weapon_profs > 4 %}
+			{{c.prime_hand}}
+	        {% if "(1d" in c.prime_hand%}
 		        </b>
                 {% endif %}
 		</td> 
 	</tr><tr>
-		<td><i>Off Hand: </i></td><td>{{c.off_hand}}</td> 
+		<td><i>Off Hand: </i></td>
+		<td>
+	        {% if "(1d" in c.off_hand %}
+		        <b>
+                {% endif %}
+			{{c.off_hand}}
+	        {% if "(1d" in c.off_hand %}
+		        </b>
+                {% endif %}
+		</td> 
 	</tr><tr>
 		<td><i>Worn: </i></td><td>{{c.worn}}</td> 
 	</tr>
@@ -210,7 +207,17 @@
       <i>{{c.pack_name}} ({{c.pack_items_allowed}} items max)</i>
       <table class="equipment">
         {% for item in c.equipment %}
-	<tr><td>{{ item }}</td></tr> 
+	<tr>
+		<td>
+	        {% if "(1d" in item %}
+		        <b>
+                {% endif %}
+			{{ item }}
+	        {% if "(1d" in item %}
+		        </b>
+                {% endif %}
+		</td>
+	</tr> 
         {% endfor %}
       </table>
       <i>Non-encumbering items carried</i>
