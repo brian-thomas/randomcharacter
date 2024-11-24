@@ -76,9 +76,17 @@ class BasicAttribRaceMixin(BasicAttributesMixin):
 
     def __init__(self, *args, **kwargs):
 
-        # randomize race
+
+        # check if we passed a desired race
+        self._race = kwargs.pop('race', None)
+
         races = ['Human', 'Human', 'Elf', 'Dwarf', 'Halfling']
-        self._race = random.choice(races)
+        if self._race not in races:
+            self._race = None # safety..
+
+        if self._race == None:
+            # randomize race
+            self._race = random.choice(races)
 
         super(BasicAttribRaceMixin, self).__init__(*args, **kwargs)
 

@@ -124,7 +124,7 @@ def index():
 def index_text():
     return redirect('/basic/text/')
 
-def _generate_char(system, level:int=1):
+def _generate_char(system, level:int=1, race:str=None):
 
     system = SYSTEMS.get(system, None)
     if not system:
@@ -132,7 +132,7 @@ def _generate_char(system, level:int=1):
         return None
 
     c = get_class(request.args.get('class'))
-    return system(classname=c, level=int(level))
+    return system(classname=c, level=int(level), race=race)
 
 def _get_display_params(fmt, system=None):
 
@@ -161,7 +161,8 @@ def _get_display_params(fmt, system=None):
 def generate(system, fmt):
 
     level = request.args.get('level', 1)
-    char = _generate_char(system, level)
+    race = request.args.get('race', None)
+    char = _generate_char(system, level, race)
     if not char:
         return redirect(url_for('generate', system='basic', fmt=fmt))
 
