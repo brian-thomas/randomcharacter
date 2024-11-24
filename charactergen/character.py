@@ -518,18 +518,18 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
     @property
     def cmbt_options_adv(self):
         options = ""
-        fighter_opts = ["Aim/Feint (AB+4, AC-4, Init-4)", "Berserk (AB+3, Dam+3, AC-4)", "Cleave (AB+1, AC-4)", 
-                            "Lightning (Init-4, AC-4)", "Rapid Shot (AC-4)", "Rapid Strike (AC-4)", "Shield Bash", "Strong (Damx2, AC-4)",
+        fighter_opts = ["Aim/Feint (AB+4, AC-4, Init-4)", "Berserk (AB+3, Dmg+3, AC-4)", "Cleave (AB+1, AC-4)", 
+                            "Lightning (Init-4, AC-4)", "Rapid Shot (AC-4)", "Rapid Strike (AC-4)", "Shield Bash", "Strong (Dmgx2, AC-4)",
                             "Stun (AC-4)", "2 Weapons"]
         if (self.character_class == characterclass.FIGHTER):
             num_allowed = int(self.level/2)
-            options = "Defs. (AB-2, AC+2), Charge (AB+2, AC-4, Damx2)"
+            options = "Defs. (AB-2, AC+2), Charge (AB+2, AC-4, Dmgx2)"
             if num_allowed > 0:
                 rand_opt  = random.sample(fighter_opts, num_allowed)
                 options = f"{options}, " + ', '.join(rand_opt)
 
         if self.has_perk('Assassin'): 
-            options = f"Sneak Attk (+{self.sneak_attack} to hit, AC-4)"
+            options = f"Sneak Attk (+{self.sneak_attack} to hit, {self.sneak_attack_dmg} dmg, AC-4)"
 
         return options
 
