@@ -992,6 +992,12 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
 
     def add_equipment_skills(self, skill_list)->list:
         # make sure we add in skills for the equipment we may be carrying
+        if self.has_item('Rope') or self.has_item("Grappling"):
+            skill_list = LotFP_Homebrew_Character.merge_list(skill_list, ['Athletics'])
+
+        if self.has_item('Bandages') or self.has_item("Surgery Kit"):
+            skill_list = LotFP_Homebrew_Character.merge_list(skill_list, ['Chirurgeon'])
+
         if self.has_item('Musical Instrument'):
             skill_list = LotFP_Homebrew_Character.merge_list(skill_list, ['Performance'])
 
