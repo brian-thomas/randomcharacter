@@ -50,7 +50,7 @@
 	<td><strong>Level</strong>: {{c.level}}</td>
     </tr>
     <tr>
-	<td><strong>Status</strong>: {{c.status}}</td>
+	    <td><strong>Status</strong>: {{ c.get_status[0] }} ({{c.get_status[1]}})</td>
     </tr>
     <tr>
         <td>{% if c.hp %}<strong>HP</strong>: {{ c.hp }}{% else %}<strong>HD</strong>: {{ c.hd }}{% endif %}</td>

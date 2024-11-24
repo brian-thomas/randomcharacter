@@ -320,6 +320,16 @@ HOMEBREW = {
         ('Stealth', 0),
         ('Social', 0),
     ],
+
+    'status' : [
+        ('Poor', -1),
+        ('Commoner', 0),
+        ('Craftsman/Merchant', 1),
+        ('Offical', 2),
+        ('High Officer', 3),
+        ('Lesser Nobility', 4),
+        ('Greater Nobility', 5),
+    ],
  
 #        ('Arcana', 0),
 #        ('Armory', 0),
@@ -398,6 +408,7 @@ HOMEBREW = {
         'Actor' : { 'save' : { 'ego' : 1 }, 'skills' : {'Deception' : 1}, 'desc' : 'Ego+1, Deception+1, may mimic others'},
         'Alert' : { 'combat' : { 'initiative' : 3 }, 'desc' : 'Cannot be surpised, Init+3'},
         'Assassin' : { 'desc' : 'Can sneak attack'},
+        'Blind Sight' : { 'desc' : "Can sense 10ft in dark."},
         'Bodybuilder' : { 'save' : { 'fortitude' : 2 }, 'skills' : {'Athletics' : 1}, 'desc' : 'Fort+2, Athletics+1'},
         'Courtier' : { 'status' : 1,  'desc' : 'Status+1, Minor immunity to law'}, 
         'Contacts' : { 'desc' : '3 contacts who render help/info 1/session.'}, 
@@ -409,6 +420,7 @@ HOMEBREW = {
         'Lucky' : { 'desc' : 'Reroll d20 rolls 3/day for best result'},
         'Organized Packer' : { 'packer' : 1, 'desc' : '+5 ready items. Enc-1.'},
         'Perceptive' : { 'save' : { 'perception' : 1 }, 'skills' : {'Search' : 1}, 'desc' : 'Per+2, Search+1'},
+        'Rapid Healer' : { 'save' : { 'health' : 1 }, 'desc' : 'Health+1, 2x healing rate.'},
         'Scholar' : { 'skills' : {'Languages' : 1, 'History' : 1}, 'desc' : 'Lang+1, History+1, 2 extra languages'},
         'Skilled' : { 'skill_pts' : 3, 'desc' : '+3 skill points'}, # fix! 
         'Strong Will' : { 'save' : { 'willpower' : 2 }, 'skills' : {'Social' : 1}, 'desc' : 'Will+2, Social+1'},

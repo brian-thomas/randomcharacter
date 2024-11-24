@@ -75,6 +75,9 @@ class Character(BasicAttributesMixin, AppearenceMixin):
         print ("skills")
         self.skills = self.get_skills()
 
+    def get_status(self):
+        return ('', self.status)
+
     def get_weapon_profs(self):
         return 1
 
@@ -400,6 +403,14 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             bonus = _num_to_str(bonus)
 
         return bonus
+
+    @property
+    def get_status(self):
+        status_lvl = self.status + int(self.level/4)
+        if status_lvl > 6: 
+            status_lvl = 6 
+        status = characterclass.HOMEBREW['status'][status_lvl] 
+        return status 
 
     def get_hp(self):
 
@@ -834,6 +845,16 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             [0,4,4,4,4,0], # 8
             [0,4,4,4,4,2], # 9
             [0,4,4,4,4,4], # 10
+            [0,4,4,4,4,4], # 11
+            [0,4,4,4,4,4], # 12
+            [0,4,4,4,4,4], # 13
+            [0,4,4,4,4,4], # 14
+            [0,4,4,4,4,4], # 15
+            [0,4,4,4,4,4], # 16
+            [0,4,4,4,4,4], # 17
+            [0,4,4,4,4,4], # 18
+            [0,4,4,4,4,4], # 19
+            [0,4,4,4,4,4], # 20
     ]
 
     allowed_elf_spells_per_level = [
@@ -1131,6 +1152,11 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         if self.race == 'Elf':
             # get 1 rando points in skills
             add_skill_points += 1
+
+        # adjust skill points for higher levels
+        if self.level > 1:
+            adj_bonus = int_bonus if int_bonus > 0 else 0
+            add_skill_points += (2 + adj_bonus) * (self.level - 1)
 
         print ("  skill cls specific")
         # deal with class-based skill tailoring 
