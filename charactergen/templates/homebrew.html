@@ -50,6 +50,9 @@
 	<td><strong>Level</strong>: {{c.level}}</td>
     </tr>
     <tr>
+	<td><strong>Status</strong>: {{c.status}}</td>
+    </tr>
+    <tr>
         <td>{% if c.hp %}<strong>HP</strong>: {{ c.hp }}{% else %}<strong>HD</strong>: {{ c.hd }}{% endif %}</td>
     </tr>
     <tr>
@@ -72,11 +75,11 @@
     </tr>
     <tr>
         <td style="text-align: left;">Melee Attack Bonus: {{ c.melee_attack_bonus }}</td>
-	<td colspan="2">{{ c.cmbt_options_basic }}</td>
+	<td colspan="2"><small>{{ c.cmbt_options_basic }}</small></td>
     </tr>
     <tr>
         <td style="text-align: left;">Ranged Attack Bonus: {{ c.ranged_attack_bonus }}</td>
-	<td colspan="2"> {{ c.cmbt_options_adv }}</td>
+	<td colspan="2"><small>{{ c.cmbt_options_adv }}</small></td>
     </tr>
     <!--
     <tr>
@@ -90,7 +93,8 @@
   {% if c.skills %}
   <div class="block">
 
-      <h3>Skills</h3>
+      <h3>Skills</h3 
+      <i>max value: {{c.max_skill_value}}</i>
       <table class="thief skills">
           <tr>
               <th>Skill</th><th>Bonus</th>
@@ -159,7 +163,27 @@
       <h3>Equipment</h3>
       <table class="equipment">
 	<tr>
-		<td><i>Prime Hand: </i></td><td>{{c.prime_hand}}</td> 
+		<td><i>Prime Hand: </i></td><td>
+	        {% if c.allowed_weapon_profs > 4 %}
+		        <b>
+                {% endif %}
+	        {% if c.allowed_weapon_profs > 6 %}
+			<i>
+                {% endif %}
+	        {% if c.allowed_weapon_profs > 8 %}
+		        <u>
+                {% endif %}
+				{{c.prime_hand}}
+	        {% if c.allowed_weapon_profs > 8 %}
+		        </u>
+                {% endif %}
+	        {% if c.allowed_weapon_profs > 6 %}
+			</i>
+                {% endif %}
+	        {% if c.allowed_weapon_profs > 4 %}
+		        </b>
+                {% endif %}
+		</td> 
 	</tr><tr>
 		<td><i>Off Hand: </i></td><td>{{c.off_hand}}</td> 
 	</tr><tr>
@@ -170,7 +194,17 @@
       <i>Ready Equipment ({{c.ready_items_allowed}} items max)</i>
       <table class="equipment">
         {% for item in c.ready_equipment %}
-	<tr><td>{{ item }}</td></tr> 
+	<tr>
+		<td>
+	        {% if "(1d" in item %}
+		        <b>
+                {% endif %}
+			{{ item }}
+	        {% if "(1d" in item %}
+		        </b>
+                {% endif %}
+		</td>
+	</tr> 
         {% endfor %}
       </table>
       <i>{{c.pack_name}} ({{c.pack_items_allowed}} items max)</i>

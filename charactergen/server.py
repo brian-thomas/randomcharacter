@@ -103,7 +103,8 @@ def generate_npcs(number, system, fmt):
     if number > 1000:
         number = 1000
 
-    characters = [_generate_char(system) for _ in range(number)]
+    level = request.args.get('level', 1)
+    characters = [_generate_char(system, level) for _ in range(number)]
 
     dparams = _get_display_params(fmt)
 
@@ -123,7 +124,7 @@ def index():
 def index_text():
     return redirect('/basic/text/')
 
-def _generate_char(system):
+def _generate_char(system, level:int=1):
 
     system = SYSTEMS.get(system, None)
     if not system:
@@ -131,9 +132,10 @@ def _generate_char(system):
         return None
 
     c = get_class(request.args.get('class'))
-    return system(classname=c)
+    return system(classname=c, level=int(level))
 
 def _get_display_params(fmt, system=None):
+
     if fmt == "text":
         template = "plaintext.txt"
         mimetype = "text/plain"
@@ -158,7 +160,8 @@ def _get_display_params(fmt, system=None):
 @app.route('/<system>/<fmt>/')
 def generate(system, fmt):
 
-    char = _generate_char(system)
+    level = request.args.get('level', 1)
+    char = _generate_char(system, level)
     if not char:
         return redirect(url_for('generate', system='basic', fmt=fmt))
 
