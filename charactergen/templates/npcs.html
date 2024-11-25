@@ -20,7 +20,7 @@
     <tr> <td colspan="10"><hr/></td> </tr>
     <tr>
         {% if c.system == 'Homebrew' %}
-	   <td class="class">{{ c.race }} {{c.class_name}}</td>
+	<td class="class">{{ c.race }} {{c.level}} lvl {{c.class_name}} {{c.get_status[0]}}</td>
         {% else -%}
 	   <td class="class">{{c.class_name}}</td>
         {% endif -%}

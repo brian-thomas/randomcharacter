@@ -376,7 +376,7 @@ HOMEBREW = {
         # 5th lvl
         [
             'Airy Water', 'Animate Dead', 'Chaos', 'Cloudkill', 'Contact Outer Sphere', 'Creation, major',
-            'Faithful Hound' 'Feeblemind', 'Hold Monster', 'Interposing Hand', 'Magic Jar', 'Passwall',
+            'Faithful Hound', 'Feeblemind', 'Hold Monster', 'Interposing Hand', 'Magic Jar', 'Passwall',
             'Secret Chest', 'Stone Shape', 'Telekinesis', 'Teleport Circle', 'Transmute Rock to Mud', 
             'Wall of Force', 'Wall of Iron', 'Wall of Stone'
         ],
@@ -607,6 +607,29 @@ LOTFP = {
             "Map",
             "Trinket",
             "Promisory Note for 50 sp",
+    ],
+    'turn': [
+        [('Skeleton', 'N'), ('Zombie', 'N'), ('Ghoul', 'N'), ], # 0  
+        [('Skeleton', 7), ('Zombie', 9), ('Ghoul', 11), ('Shadow', 12), ], # 1 
+        [('Skeleton', 5), ('Zombie', 7), ('Ghoul', 9), ('Shadow', 11), ('Wight', 12), ('Ghast', 12)],
+        [('Skeleton', 3), ('Zombie', 5), ('Ghoul', 7), ('Shadow', 9), ('Wight', 11), ('Ghast', 11), ('Wraith', 12), ], # 3
+        [('Skeleton', 'T'), ('Zombie', 3), ('Ghoul', 5), ('Shadow', 7), ('Wight', 9), ('Ghast', 9), ('Wraith', 11), ('Mummy', 12), ],
+        [('Skeleton', 'T'), ('Zombie', 'T'), ('Ghoul', 3), ('Shadow', 5), ('Wight', 7), ('Ghast', 7), ('Wraith', 9), ('Mummy', 11), ('Spectre', 12)], #5 
+        [('Skeleton', 'T'), ('Zombie', 'T'), ('Ghoul', 'T'), ('Shadow', 3), ('Wight', 5), ('Ghast', 5), ('Wraith', 7), ('Mummy', 9), ('Spectre', 11), ('Vampire', 12)], 
+        [('Skeleton', 'T'), ('Zombie', 'T'), ('Ghoul', 'T'), ('Shadow', 'T'), ('Wight', 3), ('Ghast', 3), ('Wraith', 5), ('Mummy', 7), ('Spectre', 9), ('Vampire', 11), ('Ghost', 12)], #7 
+        [('Skeleton', 'T*'), ('Zombie', 'T'), ('Ghoul', 'T'), ('Shadow', 'T'), ('Wight', 'T'), ('Ghast', 'T'), ('Wraith', 3), ('Mummy', 5), ('Spectre', 7), ('Vampire', 9), ('Ghost', 11), ('Lich', 12)],  
+        [('Skeleton', 'T*'), ('Zombie', 'T*'), ('Ghoul', 'T*'), ('Shadow', 'T'), ('Wight', 'T'), ('Ghast', 'T'), ('Wraith', 'T'), ('Mummy', 3), ('Spectre', 5), ('Vampire', 7), ('Ghost', 9), ('Lich', 11)],  # 9 
+        [('Skeleton', 'D'), ('Zombie', 'T*'), ('Ghoul', 'T*'), ('Shadow', 'T*'), ('Wight', 'T'), ('Ghast', 'T'), ('Wraith', 'T'), ('Mummy', 'T'), ('Spectre', 3), ('Vampire', 5), ('Ghost', 7), ('Lich', 9)],  # 10 
+        [('Skeleton', 'D'), ('Zombie', 'D'), ('Ghoul', 'D'), ('Shadow', 'T*'), ('Wight', 'T*'), ('Ghast', 'T*'), ('Wraith', 'T'), ('Mummy', 'T'), ('Spectre', 'T'), ('Vampire', 3), ('Ghost', 5), ('Lich', 7)],  # 11 
+        [('Skeleton', 'D'), ('Zombie', 'D'), ('Ghoul', 'D'), ('Shadow', 'D'), ('Wight', 'T*'), ('Ghast', 'T*'), ('Wraith', 'T*'), ('Mummy', 'T'), ('Spectre', 'T'), ('Vampire', 'T'), ('Ghost', 3), ('Lich', 5)],  # 12 
+        [('Skeleton', 'D*'), ('Zombie', 'D'), ('Ghoul', 'D'), ('Shadow', 'D'), ('Wight', 'D'), ('Ghast', 'T*'), ('Wraith', 'T*'), ('Mummy', 'T*'), ('Spectre', 'T'), ('Vampire', 'T'), ('Ghost', 'T'), ('Lich', 3)],  # 13 
+        [('Skeleton', 'D*'), ('Zombie', 'D*'), ('Ghoul', 'D*'), ('Shadow', 'D'), ('Wight', 'D'), ('Ghast', 'D'), ('Wraith', 'D'), ('Mummy', 'T*'), ('Spectre', 'T*'), ('Vampire', 'T*'), ('Ghost', 'T'), ('Lich', 'T')],  # 14 
+        [('Skeleton', 'D*'), ('Zombie', 'D*'), ('Ghoul', 'D*'), ('Shadow', 'D*'), ('Wight', 'D*'), ('Ghast', 'D*'), ('Wraith', 'D'), ('Mummy', 'D'), ('Spectre', 'T*'), ('Vampire', 'T'), ('Ghost', 'T'), ('Lich', 'T')],  # 15 
+        [('Skeleton', 'D*'), ('Zombie', 'D*'), ('Ghoul', 'D*'), ('Shadow', 'D*'), ('Wight', 'D*'), ('Ghast', 'D*'), ('Wraith', 'D*'), ('Mummy', 'D'), ('Spectre', 'D'), ('Vampire', 'T*'), ('Ghost', 'T'), ('Lich', 'T')],  # 16 
+        [('Skeleton', 'D*'), ('Zombie', 'D*'), ('Ghoul', 'D*'), ('Shadow', 'D*'), ('Wight', 'D*'), ('Ghast', 'D*'), ('Wraith', 'D*'), ('Mummy', 'D*'), ('Spectre', 'D'), ('Vampire', 'D'), ('Ghost', 'T*'), ('Lich', 'T')],  # 17 
+        [('Skeleton', 'D*'), ('Zombie', 'D*'), ('Ghoul', 'D*'), ('Shadow', 'D*'), ('Wight', 'D*'), ('Ghast', 'D*'), ('Wraith', 'D*'), ('Mummy', 'D*'), ('Spectre', 'D'), ('Vampire', 'D'), ('Ghost', 'D'), ('Lich', 'T*')],  # 18 
+        [('Skeleton', 'D*'), ('Zombie', 'D*'), ('Ghoul', 'D*'), ('Shadow', 'D*'), ('Wight', 'D*'), ('Ghast', 'D*'), ('Wraith', 'D*'), ('Mummy', 'D*'), ('Spectre', 'D*'), ('Vampire', 'D'), ('Ghost', 'D'), ('Lich', 'D')],  # 19 
+        [('Skeleton', 'D*'), ('Zombie', 'D*'), ('Ghoul', 'D*'), ('Shadow', 'D*'), ('Wight', 'D*'), ('Ghast', 'D*'), ('Wraith', 'D*'), ('Mummy', 'D*'), ('Spectre', 'D*'), ('Vampire', 'D*'), ('Ghost', 'D'), ('Lich', 'D')],  # 20 
     ],
     'equipment': {
         'Thief': [

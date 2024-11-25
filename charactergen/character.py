@@ -81,6 +81,9 @@ class Character(BasicAttributesMixin, AppearenceMixin):
     def get_weapon_profs(self):
         return 1
 
+    def turn_per_day(self):
+        return 1
+
     def to_dict(self):
         """
         We use vars to convert the object to a dictionary, and then replace
@@ -115,6 +118,12 @@ class Character(BasicAttributesMixin, AppearenceMixin):
         Get the character's hit die.
         """
         return self.character_class['hitdice']
+
+    def turn(self):
+        '''
+        Get the cleric turn undead table.
+        '''
+        return []
 
     @property
     def max_ac(self):
@@ -302,6 +311,10 @@ class LotFPCharacter(AscendingAcMixin, Character):
     def system(self):
         return "LotFP"
 
+    @property 
+    def turn(self): 
+        return characterclass.LOTFP['turn'][self.level]
+
     @property
     def save_name_table(self):
         return characterclass.LOTFP['saves']
@@ -403,6 +416,10 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
             bonus = _num_to_str(bonus)
 
         return bonus
+
+    @property
+    def turn_per_day(self):
+        return int(self.level/5) + 1
 
     @property
     def get_status(self):
