@@ -779,6 +779,9 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         if len(self.ready_equipment) + 2 >= 20:
             self.encumbrance += 1
 
+        str_bonus = self.get_bonus(*self.attributes[characterclass.STR])
+        self.encumbrance -= str_bonus
+
         if self.org_packer:
             self.encumbrance -= 1
 
@@ -1224,8 +1227,6 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         # add skills for any carried equipment
         skill_names = self.add_equipment_skills(skill_names)
 
-        print (f"  skill apportion remaining randomly pts:{add_skill_points}\n choice list: {skill_names}\n existing skills: %s" % skills)
-        print (f"  max skill val:%s" % self.max_skill_value)
         while (add_skill_points > 0):
             s = random.choice(skill_names)
             if s in skills:
@@ -1236,8 +1237,6 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
                 # only add if we are under the threshold
                 skills[s] = v + 1
                 add_skill_points -= 1
-                print (f"add point to skill: %s" % s)
-                print (f"   pts left: {add_skill_points}")
 
         # for special formatting which we aren't using
         if self.has_perk('Assassin'):
@@ -1249,7 +1248,6 @@ class LotFP_Homebrew_Character(LotFPCharacter, BasicAttribRaceMixin):
         # pass thru and make an array
         skills = [(s, _num_to_str(v)) for s, v in skills.items()]
 
-        print ("  return skills")
         return skills
 
 
